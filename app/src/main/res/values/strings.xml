@@ -7,7 +7,6 @@
     <string name="berezin">Максим Березин</string>
     <string name="golyudov">Алексей Голюдов</string>
     <string name="kolesnikov">Александр Колесников</string>
-    <string name="app_name">EmployMe</string>
     <string name="favourite">Избранное</string>
     <string name="list_empty">Список пуст</string>
 </resources>

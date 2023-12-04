@@ -53,6 +53,8 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.0")
     implementation("androidx.room:room-ktx:2.6.0")
 
+    implementation("io.insert-koin:koin-android:3.3.0")
+
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
 
