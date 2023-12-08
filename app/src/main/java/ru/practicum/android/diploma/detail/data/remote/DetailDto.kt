@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.detail.data.remote
 
+import com.google.gson.annotations.SerializedName
+
 data class DetailDto(
     @SerializedName("area")
     val area: Area,
