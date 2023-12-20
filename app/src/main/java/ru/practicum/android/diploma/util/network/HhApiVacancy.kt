@@ -5,16 +5,16 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.search.data.models.SearchResponse
 import ru.practicum.android.diploma.detail.data.dto.DetailVacancyDto
+import ru.practicum.android.diploma.detail.data.dto.SimilarVacanciesDto
 import ru.practicum.android.diploma.filter.data.model.CountryDto
 import ru.practicum.android.diploma.filter.data.model.IndustryDto
 import ru.practicum.android.diploma.filter.data.model.RegionDto
-import ru.practicum.android.diploma.detail.data.dto.SimilarVacanciesDto
+import ru.practicum.android.diploma.search.data.models.SearchResponse
 
 interface HhApiVacancy {
 
-    //Запрос списка вакансий
+    // Запрос списка вакансий
     @Headers(
         HEADER_AUTH,
         HH_USER
@@ -24,7 +24,7 @@ interface HhApiVacancy {
         @QueryMap options: HashMap<String, String>
     ): SearchResponse
 
-    //Запрос дет. информации по вакансии
+    // Запрос дет. информации по вакансии
     @Headers(
         HEADER_AUTH,
         HH_USER
@@ -43,7 +43,7 @@ interface HhApiVacancy {
         @Path("vacancy_id") vacancy: String
     ): SimilarVacanciesDto
 
-    //Запрос списка отраслей
+    // Запрос списка отраслей
     @Headers(
         HEADER_AUTH,
         HH_USER
@@ -51,7 +51,7 @@ interface HhApiVacancy {
     @GET("industries")
     suspend fun getIndustries(): List<IndustryDto>
 
-    //Запрос списка стран
+    // Запрос списка стран
     @Headers(
         HEADER_AUTH,
         HH_USER
@@ -59,7 +59,7 @@ interface HhApiVacancy {
     @GET("areas/countries")
     suspend fun getCountries(): List<CountryDto>
 
-    //Запрос списка регионов
+    // Запрос списка регионов
     @Headers(
         HEADER_AUTH,
         HH_USER
@@ -67,7 +67,7 @@ interface HhApiVacancy {
     @GET("areas")
     suspend fun getRegions(): List<RegionDto>
 
-    //Запрос списка регионов по стране
+    // Запрос списка регионов по стране
     @Headers(
         HEADER_AUTH,
         HH_USER

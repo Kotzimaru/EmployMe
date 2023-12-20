@@ -16,7 +16,7 @@ class SimilarRepositoryImpl(private val networkClient: NetworkClient): SimilarRe
         return when (response.resultCode) {
             ResponseCodes.SUCCESS -> {
                 DtoConsumer.Success(
-                    (response.data as SimilarVacanciesDto).mapToSimillarVacancies()
+                    (response as SimilarVacanciesDto).mapToSimillarVacancies()
                 )
             }
 

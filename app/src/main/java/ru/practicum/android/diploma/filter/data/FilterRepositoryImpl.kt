@@ -5,18 +5,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.data.converter.CountryConverter
-import ru.practicum.android.diploma.filter.data.converter.RegionConverter
 import ru.practicum.android.diploma.filter.data.converter.FilterSettingsConverter
 import ru.practicum.android.diploma.filter.data.converter.IndustryConverter
+import ru.practicum.android.diploma.filter.data.converter.RegionConverter
 import ru.practicum.android.diploma.filter.data.model.CountriesResponse
 import ru.practicum.android.diploma.filter.data.model.FilterRequest
 import ru.practicum.android.diploma.filter.data.model.IndustriesResponse
+import ru.practicum.android.diploma.filter.data.model.IndustryDto
 import ru.practicum.android.diploma.filter.data.model.RegionsResponse
 import ru.practicum.android.diploma.filter.domain.api.FilterRepository
 import ru.practicum.android.diploma.filter.domain.models.FilterSettings
 import ru.practicum.android.diploma.filter.domain.models.Region
-import ru.practicum.android.diploma.search.data.models.Industry
 import ru.practicum.android.diploma.search.data.models.ResponseCodes
+import ru.practicum.android.diploma.search.data.models.dto.Industry
 import ru.practicum.android.diploma.search.domain.api.DtoConsumer
 import ru.practicum.android.diploma.util.network.NetworkClient
 import ru.practicum.android.diploma.util.storage.sharedpreference.SharedPrefStorageClient
@@ -24,7 +25,7 @@ import ru.practicum.android.diploma.util.storage.sharedpreference.SharedPrefStor
 class FilterRepositoryImpl(
     private val storageClient: SharedPrefStorageClient,
     private val networkClient: NetworkClient,
-): FilterRepository {
+) : FilterRepository {
     override suspend fun saveCountryFilter(country: String) {
         storageClient.saveCountry(country)
     }
@@ -61,16 +62,13 @@ class FilterRepositoryImpl(
         return FilterSettingsConverter().map(storageClient.getFilter())
     }
 
-    override suspend fun getIndustries(): Flow<DtoConsumer<List<Industry>>> = flow {
+    override suspend fun getIndustries(): Flow<DtoConsumer<List<IndustryDto>>> = flow {
         val response = networkClient.doRequest(FilterRequest.Industries)
-        when (response.resultCode){
-            ResponseCodes.SUCCESS -> emit(
-                DtoConsumer.Success(
-                    (response.data as IndustriesResponse).items.map {
-                        IndustryConverter.map(it)
-                    }
-                )
-            )
+        when (response.resultCode) {
+            ResponseCodes.SUCCESS -> {
+                val industries = response as IndustriesResponse
+                emit(DtoConsumer.Success(industries.items))
+            }
             ResponseCodes.NO_NET_CONNECTION -> {
                 emit(DtoConsumer.NoInternet(response.resultCode.code))
             }
@@ -82,10 +80,10 @@ class FilterRepositoryImpl(
 
     override suspend fun getCountries(): Flow<DtoConsumer<List<Region>>> = flow<DtoConsumer<List<Region>>> {
         val response = networkClient.doRequest(FilterRequest.Countries)
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> emit(
                 DtoConsumer.Success(
-                    (response.data as CountriesResponse).items.map {
+                    (response as CountriesResponse).items.map {
                         CountryConverter.map(it)
                     }
                 )
@@ -101,10 +99,10 @@ class FilterRepositoryImpl(
 
     override suspend fun getRegions(): Flow<DtoConsumer<List<Region>>> = flow<DtoConsumer<List<Region>>> {
         val response = networkClient.doRequest(FilterRequest.Regions)
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> emit(
                 DtoConsumer.Success(
-                    (response.data as RegionsResponse).items.map {
+                    (response as RegionsResponse).items.map {
                         RegionConverter.map(it)
                     }
                 )
@@ -120,10 +118,10 @@ class FilterRepositoryImpl(
 
     override suspend fun getRegionsByCountry(countryId: String): Flow<DtoConsumer<List<Region>>> = flow<DtoConsumer<List<Region>>> {
         val response = networkClient.doRequest(FilterRequest.RegionsByCountry(countryId))
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> emit(
                 DtoConsumer.Success(
-                    (response.data as RegionsResponse).items.map {
+                    (response as RegionsResponse).items.map {
                         RegionConverter.map(it)
                     }
                 )

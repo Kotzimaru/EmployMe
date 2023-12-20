@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.filter.domain.models
 
-import ru.practicum.android.diploma.search.data.models.Industry
+import ru.practicum.android.diploma.search.data.models.dto.Industry
 
 data class FilterSettings(
     val salary: String?,

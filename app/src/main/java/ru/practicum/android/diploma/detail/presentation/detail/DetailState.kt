@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.detail.presentation.detail
 
 import ru.practicum.android.diploma.detail.domain.models.DetailVacancy
 
-
 sealed interface DetailState {
     data object Loading : DetailState
     data class Error(

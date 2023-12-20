@@ -83,6 +83,8 @@ class DetailViewModel(
                     getVacancyFromDB(id)
                     //_state.value = NoConnect(resultData.responseCodes.name)
                 }
+
+                else -> {}
             }
 
         }

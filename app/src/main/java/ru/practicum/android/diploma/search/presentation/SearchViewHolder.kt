@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.util.ImageScale
 class SearchViewHolder(private val binding: ItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(vacancy: Vacancy) {
-        // binding.department.text = vacancy.department
+        //binding.department.text = vacancy.department
         binding.salary.text = vacancy.salary
         binding.tvVacancyName.text = vacancy.name
 

@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.search.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import ru.practicum.android.diploma.search.data.AdapterSearch
 import ru.practicum.android.diploma.search.data.SearchRepositoryImpl
 import ru.practicum.android.diploma.search.domain.SearchInteractor
 import ru.practicum.android.diploma.search.domain.api.SearchRepository
@@ -11,8 +12,10 @@ import ru.practicum.android.diploma.search.presentation.SearchViewModel
 val searchModule = module {
 
     single<SearchRepository> {
-        SearchRepositoryImpl(get())
+        SearchRepositoryImpl(get(), get())
     }
+
+    single { AdapterSearch(get()) }
 
     single<SearchInteractor> {
         SearchInteractorImpl(get())

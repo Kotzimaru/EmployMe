@@ -23,7 +23,7 @@ import ru.practicum.android.diploma.detail.presentation.detail.DetailState.Error
 import ru.practicum.android.diploma.detail.presentation.detail.DetailState.Loading
 import ru.practicum.android.diploma.detail.presentation.detail.DetailState.NoConnect
 import ru.practicum.android.diploma.detail.presentation.detail.DetailState.Success
-import ru.practicum.android.diploma.detail.presentation.similar.VACANCY
+import ru.practicum.android.diploma.detail.presentation.semilar.VACANCY
 
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
@@ -51,7 +51,6 @@ class DetailFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { result ->
             render(result)
         }
-
 
         binding.back.setOnClickListener {
             view.findNavController().popBackStack()
@@ -87,7 +86,6 @@ class DetailFragment : Fragment() {
             is DetailState.IsFavorite -> {
                 setFavorite(state.isFavorite)
             }
-
         }
     }
 

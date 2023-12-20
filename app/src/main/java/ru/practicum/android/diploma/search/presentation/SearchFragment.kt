@@ -11,38 +11,22 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.detail.presentation.detail.DetailFragment
-import ru.practicum.android.diploma.search.domain.models.Filter
 import ru.practicum.android.diploma.search.presentation.models.SearchStates
+import ru.practicum.android.diploma.util.TextUtils
 
-class SearchFragment : Fragment(R.layout.fragment_search) {
-
-    private lateinit var binding: FragmentSearchBinding
-    private var filter: Filter = Filter(
-        page = 0,
-        request = "android",
-        area = "",
-        industry = "",
-        salary = 1000,
-        onlyWithSalary = false
-    )
-    private val viewModel: SearchViewModel by viewModel {
-        parametersOf(
-            filter
-        )
-    }
-    private var searchJob: Job? = null
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel by viewModel<SearchViewModel>()
+    private lateinit var adapter: SearchAdapter
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -51,7 +35,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -66,7 +50,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
-                is SearchStates.Default -> {
+                is SearchStates.Start -> {
                     binding.apply {
                         rvSearch.visibility = GONE
                         placeholderImage.setImageResource(R.drawable.image_binoculars)
@@ -112,9 +96,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
 
                 is SearchStates.Success -> {
-                    setSuccessScreen(state.trackList.count()) // Передать общее кол-во найденных вакансий
-                    adapter.vacancyList = state.trackList.toMutableList()
-                    adapter.notifyDataSetChanged()
+                    setSuccessScreen(state.found)
+                    adapter.vacancyList = state.vacancyList.toMutableList()
                 }
 
                 is SearchStates.Loading -> {
@@ -134,6 +117,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.btClear.setOnClickListener {
             clearText()
         }
+        binding.rvSearch.addOnScrollListener(initScrlLsnr())
     }
 
     private fun setSuccessScreen(amount: Int) {
@@ -142,7 +126,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.progressBar.visibility = GONE
         binding.placeholderMessage.visibility = GONE
         binding.tvRvHeader.visibility = VISIBLE
-        binding.tvRvHeader.text = amount.toString()
+        binding.tvRvHeader.text = getString(R.string.founded, TextUtils.addSeparator(amount))
     }
 
     private fun tWCreator() = object : TextWatcher {
@@ -160,17 +144,24 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             )
 
             if (start != before) {
-                searchJob?.cancel()
-                searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                    delay(SEARCH_DEBOUNCE_DELAY_MILS)
-                    filter.request = s?.toString() ?: ""
-                    viewModel.loadVacancy()
-                }
+                viewModel.loadVacancy(s?.toString() ?: "")
             }
         }
 
         override fun afterTextChanged(s: Editable?) {
             changeVisBottomNav(VISIBLE)
+        }
+    }
+
+    private fun initScrlLsnr() = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val pos =
+                (binding.rvSearch.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+            val itemsCount = adapter.itemCount
+            if (pos >= itemsCount - 1) {
+                viewModel.getNewPage()
+            }
         }
     }
 
@@ -181,6 +172,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private fun clearText() {
         binding.etSearch.setText("")
+        viewModel.clearAll()
         val endDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_search)
         binding.etSearch.setCompoundDrawablesRelativeWithIntrinsicBounds(
             null,
@@ -191,7 +183,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun clickOnVacancy(): (String) -> Unit = { id ->
-
         findNavController().navigate(
             R.id.action_searchFragment_to_detailFragment,
             DetailFragment.createArgs(id)
@@ -201,6 +192,5 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     companion object {
         const val VISIBLE = View.VISIBLE
         const val GONE = View.GONE
-        const val SEARCH_DEBOUNCE_DELAY_MILS = 2000L
     }
 }

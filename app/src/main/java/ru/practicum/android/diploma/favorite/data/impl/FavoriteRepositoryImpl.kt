@@ -2,12 +2,12 @@ package ru.practicum.android.diploma.favorite.data.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.util.storage.db.AppDatabase
-import ru.practicum.android.diploma.util.storage.db.converter.FavoriteDbConverter
 import ru.practicum.android.diploma.detail.domain.models.DetailVacancy
 import ru.practicum.android.diploma.favorite.domain.api.FavoriteRepository
 import ru.practicum.android.diploma.favorite.presentation.models.FavoriteStates
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.storage.db.AppDatabase
+import ru.practicum.android.diploma.util.storage.db.converter.FavoriteDbConverter
 
 class FavoriteRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -21,10 +21,10 @@ class FavoriteRepositoryImpl(
         appDatabase.favoriteDao().deleteFavorite(id)
     }
 
-    override fun getFavorites(): Flow<Pair<FavoriteStates,MutableList<Vacancy>>> = flow {
+    override fun getFavorites(): Flow<Pair<FavoriteStates, MutableList<Vacancy>>> = flow {
         try {
             val favorites = appDatabase.favoriteDao().getFavorites()
-            if(favorites.isEmpty()){
+            if (favorites.isEmpty()) {
                 emit(Pair(FavoriteStates.Empty, mutableListOf()))
             } else {
                 val mappedFavorites = ArrayList<Vacancy>()
@@ -33,15 +33,18 @@ class FavoriteRepositoryImpl(
                 }
                 emit(Pair(FavoriteStates.Success, mappedFavorites.toMutableList()))
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             emit(Pair(FavoriteStates.Error, mutableListOf()))
         }
     }
 
     override fun getFavorite(id: String): Flow<List<DetailVacancy>> = flow {
         val favorites = appDatabase.favoriteDao().getFavorite(id)
-        emit(favorites.map {
-                favorite -> favoriteDbConverter.map(favorite)
-        })
+        emit(
+            favorites.map {
+                    favorite ->
+                favoriteDbConverter.map(favorite)
+            }
+        )
     }
 }

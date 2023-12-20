@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.util.storage.db.converter
 
-import ru.practicum.android.diploma.util.storage.db.entity.FavoriteEntity
 import ru.practicum.android.diploma.detail.domain.models.CurrencyDetailVacancy
 import ru.practicum.android.diploma.detail.domain.models.DetailVacancy
 import ru.practicum.android.diploma.detail.domain.models.SalaryDetailVacancy
 import ru.practicum.android.diploma.search.data.models.dto.Salary
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.storage.db.entity.FavoriteEntity
 
 class FavoriteDbConverter {
     fun map(favoriteVacancy: FavoriteEntity): DetailVacancy {
@@ -77,21 +77,22 @@ class FavoriteDbConverter {
         )
     }
 
-
     fun map2(favoriteVacancy: FavoriteEntity): Vacancy {
         return Vacancy(
             id = favoriteVacancy.id,
             area = favoriteVacancy.areaName,
-        // val department: String?,
+            // department = favoriteVacancy String?,
             employerImgUrl = favoriteVacancy.logoUrlsEmployerOriginal!!,
             employer = favoriteVacancy.nameEmployer!!,
             name = favoriteVacancy.name,
-            salary = formSalaryString(Salary(
-                currency = favoriteVacancy.currency,
-                from = favoriteVacancy.from,
-                gross = favoriteVacancy.gross,
-                to = favoriteVacancy.to
-            )),
+            salary = formSalaryString(
+                Salary(
+                    currency = favoriteVacancy.currency,
+                    from = favoriteVacancy.from,
+                    gross = favoriteVacancy.gross,
+                    to = favoriteVacancy.to
+                )
+            ),
             type = ""
         )
     }

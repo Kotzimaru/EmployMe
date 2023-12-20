@@ -5,8 +5,8 @@ import ru.practicum.android.diploma.detail.data.mapper.mapToDetailVacancy
 import ru.practicum.android.diploma.detail.data.models.DetailRequest
 import ru.practicum.android.diploma.detail.domain.api.VacancyDetailRepository
 import ru.practicum.android.diploma.detail.domain.models.DetailVacancy
+import ru.practicum.android.diploma.search.data.models.ResponseCodes
 import ru.practicum.android.diploma.search.domain.api.DtoConsumer
-import ru.practicum.android.diploma.search.domain.models.ResponseCodes
 import ru.practicum.android.diploma.util.network.NetworkClient
 
 class VacancyDetailRepositoryImpl(private val networkClient: NetworkClient) : VacancyDetailRepository {
@@ -14,17 +14,17 @@ class VacancyDetailRepositoryImpl(private val networkClient: NetworkClient) : Va
     override suspend fun doRequest(idVacancy: String): DtoConsumer<DetailVacancy> {
         val response = networkClient.doRequest(DetailRequest(idVacancy))
         return when (response.resultCode) {
-            ru.practicum.android.diploma.search.data.models.ResponseCodes.SUCCESS -> {
+            ResponseCodes.SUCCESS -> {
                 DtoConsumer.Success(
-                    (response.data as DetailVacancyDto).mapToDetailVacancy()
+                    (response as DetailVacancyDto).mapToDetailVacancy()
                 )
             }
 
-            ru.practicum.android.diploma.search.data.models.ResponseCodes.NO_NET_CONNECTION -> DtoConsumer.NoInternet(
+            ResponseCodes.NO_NET_CONNECTION -> DtoConsumer.NoInternet(
                 response.resultCode.code
             )
 
-            ru.practicum.android.diploma.search.data.models.ResponseCodes.ERROR -> DtoConsumer.Error(response.resultCode.code)
+            ResponseCodes.ERROR -> DtoConsumer.Error(response.resultCode.code)
         }
     }
 }

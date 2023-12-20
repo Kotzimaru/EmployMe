@@ -33,6 +33,7 @@
     <string name="employer_name">Пятерка</string>
     <string name="from">от</string>
     <string name="to">до</string>
+    <string name="founded">Найдено %s вакансий</string>
     <string name="required_experience">Требуемый опыт</string>
     <string name="vacancy">Вакансия</string>
     <string name="not_salary">Зарплата не указана</string>
@@ -46,4 +47,14 @@
     <string name="comment">Комментарий</string>
     <string name="similar_vacancies">Похожие вакансии</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="RUR">₽</string>
+    <string name="USD">$</string>
+    <string name="AZN">₼</string>
+    <string name="BYR">Br</string>
+    <string name="EUR">€</string>
+    <string name="GEL">₾</string>
+    <string name="KGS">с</string>
+    <string name="KZT">₸</string>
+    <string name="UAH">₴</string>
+    <string name="UZS">soʻm</string>
 </resources>

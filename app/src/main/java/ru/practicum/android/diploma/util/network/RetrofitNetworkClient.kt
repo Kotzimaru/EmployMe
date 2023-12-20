@@ -14,8 +14,6 @@ class RetrofitNetworkClient(
     private val validator: InternetConnectionValidator
 ) : NetworkClient {
 
-    override var lock = Any()
-
     private val retrofitHh =
         Retrofit.Builder()
             .baseUrl(BASE_HH_API)
@@ -36,14 +34,12 @@ class RetrofitNetworkClient(
             } catch (e: Exception) {
                 Response().apply { resultCode = ResponseCodes.ERROR }
             }
-            // Запрос пишем тут
 
             is DetailRequest -> try {
                 val resp = hhService.getDetail(dto.id)
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")
@@ -55,7 +51,6 @@ class RetrofitNetworkClient(
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")
@@ -67,7 +62,6 @@ class RetrofitNetworkClient(
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")
@@ -79,7 +73,18 @@ class RetrofitNetworkClient(
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
+                }
+            } catch (e: Exception) {
+                Log.d("TAG results", "error $e")
+                Response().apply { resultCode = ResponseCodes.ERROR }
+            }
+
+            is FilterRequest.Countries -> try {
+                val resp = hhService.getCountries()
+                Log.d("TAG results", "resp $resp")
+                Response().apply {
+                    resultCode = ResponseCodes.SUCCESS
+                    // data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")
@@ -91,7 +96,7 @@ class RetrofitNetworkClient(
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
+                    // data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")
@@ -103,7 +108,7 @@ class RetrofitNetworkClient(
                 Log.d("TAG results", "resp $resp")
                 Response().apply {
                     resultCode = ResponseCodes.SUCCESS
-                    data = resp
+                    // data = resp
                 }
             } catch (e: Exception) {
                 Log.d("TAG results", "error $e")

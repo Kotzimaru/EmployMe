@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSimilarBinding
 import ru.practicum.android.diploma.detail.domain.models.SimilarVacancy
 import ru.practicum.android.diploma.detail.presentation.detail.VACANCY_ID
+import ru.practicum.android.diploma.detail.presentation.semilar.SimilarViewModel
 
 class SimilarFragment : Fragment() {
     private var _binding: FragmentSimilarBinding? = null
@@ -21,7 +22,8 @@ class SimilarFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSimilarBinding.inflate(inflater, container, false)

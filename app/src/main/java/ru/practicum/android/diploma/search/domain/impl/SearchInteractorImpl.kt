@@ -7,30 +7,23 @@ import ru.practicum.android.diploma.search.domain.api.DtoConsumer
 import ru.practicum.android.diploma.search.domain.api.SearchRepository
 import ru.practicum.android.diploma.search.domain.models.Filter
 import ru.practicum.android.diploma.search.domain.models.ResponseCodes
-import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.search.domain.models.VacancyInfo
 
 class SearchInteractorImpl(
-    val repository: SearchRepository
+    private val repository: SearchRepository
 ) : SearchInteractor {
     override suspend fun execute(filter: Filter): Flow<VacancyInfo> =
         repository.doRequest(filter = filter).map { result ->
             when (result) {
-                is DtoConsumer.Success -> Adapter.searchInfoCreator(
-                    responseCodes = ResponseCodes.SUCCESS,
-                    result.data
-                )
+                is DtoConsumer.Success -> result.data
 
-                is DtoConsumer.Error -> Adapter.searchInfoCreator(ResponseCodes.ERROR, null)
+                is DtoConsumer.Error -> Adapter.codeMapper(ResponseCodes.ERROR)
 
-                is DtoConsumer.NoInternet -> Adapter.searchInfoCreator(ResponseCodes.NO_NET_CONNECTION, null)
+                is DtoConsumer.NoInternet -> Adapter.codeMapper(ResponseCodes.NO_NET_CONNECTION)
             }
         }
 }
 
 object Adapter {
-    fun searchInfoCreator(responseCodes: ResponseCodes, vacancy: List<Vacancy>?) = VacancyInfo(
-        responseCodes = responseCodes,
-        vacancy
-    )
+    fun codeMapper(codesError: ResponseCodes) = VacancyInfo(responseCodes = codesError, null)
 }

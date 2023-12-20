@@ -7,7 +7,6 @@ import androidx.room.Query
 
 import ru.practicum.android.diploma.util.storage.db.entity.FavoriteEntity
 
-
 @Dao
 interface FavoriteDao {
 
