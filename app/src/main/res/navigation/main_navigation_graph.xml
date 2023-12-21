@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_filterPlaceWorkFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_filterPlaceWorkFragment_to_filterCountryFragment"
+            app:destination="@id/filterCountryFragment" />
     </fragment>
     <fragment
         android:id="@+id/filterIndustryFragment"
@@ -76,5 +79,13 @@
         <action
             android:id="@+id/action_filterIndustryFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterCountryFragment"
+        android:name="ru.practicum.android.diploma.filter.presentation.FilterCountryFragment"
+        android:label="FilterCountryFragment" >
+        <action
+            android:id="@+id/action_filterCountryFragment_to_filterPlaceWorkFragment"
+            app:destination="@id/filterPlaceWorkFragment" />
     </fragment>
 </navigation>

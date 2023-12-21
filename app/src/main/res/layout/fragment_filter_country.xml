@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="ru.practicum.android.diploma.filter.presentation.FilterCountryFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_border"
@@ -117,9 +118,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:indeterminateTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view_filters"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_view_filters"
-        app:layout_constraintStart_toStartOf="@+id/recycler_view_filters"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_filter_country"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_filter_country"
+        app:layout_constraintStart_toStartOf="@+id/recycler_filter_country"
         app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
 
     <TextView
