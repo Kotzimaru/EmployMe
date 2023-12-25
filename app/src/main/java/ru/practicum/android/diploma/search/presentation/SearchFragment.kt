@@ -26,7 +26,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<SearchViewModel>()
-    private lateinit var adapter: SearchAdapter
+    private var adapter: SearchAdapter? = null
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -158,9 +158,11 @@ class SearchFragment : Fragment() {
             super.onScrolled(recyclerView, dx, dy)
             val pos =
                 (binding.rvSearch.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-            val itemsCount = adapter.itemCount
-            if (pos >= itemsCount - 1) {
-                viewModel.getNewPage()
+            val itemsCount = adapter?.itemCount
+            if (itemsCount != null) {
+                if (pos >= itemsCount - 1) {
+                    viewModel.getNewPage()
+                }
             }
         }
     }

@@ -77,8 +77,9 @@ class SearchViewModel(
                 vacancyList.addAll(jobsInfo.vacancy!!)
                 page = jobsInfo.page
                 maxPage = jobsInfo.pages
-                if (page == 0)
+                if (page == 0) {
                     founded = jobsInfo.found
+                }
 
                 state = jobsInfo.let {
                     SearchStates.Success(

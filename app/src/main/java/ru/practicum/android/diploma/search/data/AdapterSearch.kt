@@ -11,7 +11,6 @@ import ru.practicum.android.diploma.util.TextUtils
 import ru.practicum.android.diploma.util.network.ResourceProvider
 
 class AdapterSearch(private val resourceProvider: ResourceProvider) {
-
     fun vacancyInfoDtoToVacancyInfo(response: SearchResponse, code: Int) = VacancyInfo(
         responseCodes = codeMapper(code, response.found),
         vacancy = response.items.map {
@@ -36,14 +35,17 @@ class AdapterSearch(private val resourceProvider: ResourceProvider) {
     )
 
     private fun codeMapper(code: Int, found: Int) = when (code) {
-        200 -> if (found == 0) ResponseCodes.NO_RESULTS else ResponseCodes.SUCCESS
-        500 -> ResponseCodes.NO_NET_CONNECTION
+        NO_RESULTS_CODE -> if (found == 0) ResponseCodes.NO_RESULTS else ResponseCodes.SUCCESS
+        NO_NET_CONNECTION_CODE -> ResponseCodes.NO_NET_CONNECTION
+        ERROR_CODE -> ResponseCodes.ERROR
         else -> ResponseCodes.ERROR
     }
     private fun getLogo(logoUrls: LogoUrls?): String {
-        if (logoUrls?.mediumIcon != null) return logoUrls.mediumIcon.toString()
-        if (logoUrls?.original != null) return logoUrls.original.toString()
-        return ""
+        return when {
+            logoUrls?.mediumIcon != null -> logoUrls.mediumIcon.toString()
+            logoUrls?.original != null -> logoUrls.original.toString()
+            else -> ""
+        }
     }
 
     private fun makeHasMap(filter: Filter): HashMap<String, String> {
@@ -55,5 +57,10 @@ class AdapterSearch(private val resourceProvider: ResourceProvider) {
         if (filter.industry != null) request["industry"] = filter.industry
         if (filter.salary != null) request["salary"] = filter.salary.toString()
         return request
+    }
+    companion object {
+        const val NO_RESULTS_CODE = 200
+        const val NO_NET_CONNECTION_CODE = 500
+        const val ERROR_CODE = 500
     }
 }
