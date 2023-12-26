@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_12"
-        android:src="@drawable/trailing_icon_2__1_"
+        android:src="@drawable/not_favorite2"
         app:layout_constraintBottom_toBottomOf="@id/vacancy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/vacancy" />
