@@ -160,6 +160,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 searchJob = viewLifecycleOwner.lifecycleScope.launch {
                     delay(SEARCH_DEBOUNCE_DELAY_MILS)
                     filter.request = s?.toString() ?: ""
+                    binding.placeholderImage.visibility = View.GONE
                     viewModel.loadVacancy()
                 }
             }
