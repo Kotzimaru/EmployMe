@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.detail.domain.impl
 
-import android.util.Log
 import ru.practicum.android.diploma.detail.domain.SimilarInteractor
 import ru.practicum.android.diploma.detail.domain.api.SimilarRepository
 import ru.practicum.android.diploma.detail.domain.models.SimilarVacanciesInfo
@@ -13,7 +12,6 @@ class SimilarInteractorImpl(private val repository: SimilarRepository) : Similar
     override suspend fun execute(vacancy: String): SimilarVacanciesInfo {
         return when (val result = repository.doRequest(vacancy)) {
             is DtoConsumer.Success -> {
-                Log.d("TAG result", "result - ${result.data}")
                 SimilarVacanciesInfo(
                     responseCodes = SUCCESS,
                     vacancies = result.data
@@ -21,7 +19,6 @@ class SimilarInteractorImpl(private val repository: SimilarRepository) : Similar
             }
 
             is DtoConsumer.Error -> {
-                Log.d("TAG result", "result - ${result.errorCode}")
                 SimilarVacanciesInfo(
                     responseCodes = ERROR,
                     vacancies = null
@@ -29,7 +26,6 @@ class SimilarInteractorImpl(private val repository: SimilarRepository) : Similar
             }
 
             is DtoConsumer.NoInternet -> {
-                Log.d("TAG result", "result - ${result.errorCode}")
                 SimilarVacanciesInfo(
                     responseCodes = NO_NET_CONNECTION,
                     vacancies = null

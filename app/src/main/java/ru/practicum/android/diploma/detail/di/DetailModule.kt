@@ -33,13 +33,16 @@ val detailModule = module {
 
     viewModel {
         DetailViewModel(
-            get(), get(), get()
+            get(),
+            get(),
+            get()
         )
     }
 
     viewModel {
         SimilarViewModel(
-            get(), get()
+            get(),
+            get()
         )
     }
 }

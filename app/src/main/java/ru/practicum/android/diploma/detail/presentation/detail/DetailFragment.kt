@@ -38,7 +38,8 @@ class DetailFragment : Fragment() {
     private lateinit var detailVacancy: DetailVacancy
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
@@ -88,18 +89,15 @@ class DetailFragment : Fragment() {
             is DetailState.IsFavorite -> {
                 setFavorite(state.isFavorite)
             }
-
         }
     }
 
-    private fun setFavorite(isFavourite: Boolean?){
+    private fun setFavorite(isFavourite: Boolean?) {
         when (isFavourite) {
             true -> binding.favorite.setImageResource(R.drawable.favorite)
             else -> binding.favorite.setImageResource(R.drawable.not_favorite2)
         }
     }
-
-
 
     @SuppressLint("SetTextI18n")
     private fun setData(detailVacancy: DetailVacancy) {
@@ -131,10 +129,12 @@ class DetailFragment : Fragment() {
         binding.grSkills.isVisible = !detailVacancy.keySkills.isNullOrEmpty()
         binding.keySkillsContent.text = detailVacancy.keySkills.orEmpty()
 
-        binding.contacts.isVisible = !(detailVacancy.comment == null
-            && detailVacancy.phone == null
-            && detailVacancy.email == null
-            && detailVacancy.contactName == null)
+        binding.contacts.isVisible = !(
+            detailVacancy.comment == null &&
+            detailVacancy.phone == null &&
+            detailVacancy.email == null &&
+            detailVacancy.contactName == null
+            )
 
         binding.grComment.isVisible = !detailVacancy.comment.isNullOrEmpty()
         binding.comment.text = detailVacancy.comment.orEmpty()
@@ -151,9 +151,7 @@ class DetailFragment : Fragment() {
         setDetailsContentListeners(detailVacancy)
 
         binding.progress.isVisible = false
-      //  binding.scroll.isVisible = true
         binding.errorPlaceholder.root.isVisible = false
-        // binding.btSimilar.isVisible = !fromDB
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -189,7 +187,7 @@ class DetailFragment : Fragment() {
 
     private fun actionSendEmail(email: String?) {
         val intent = Intent(Intent.ACTION_SENDTO)
-        intent.data = Uri.parse("mailto:${email}")
+        intent.data = Uri.parse("mailto:$email")
         try {
             startActivity(intent)
         } catch (_: Exception) {
@@ -197,7 +195,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun actionDial(phoneNumber: String?) {
-        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${phoneNumber}"))
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
         try {
             startActivity(intent)
         } catch (_: Exception) {
@@ -206,7 +204,6 @@ class DetailFragment : Fragment() {
 
     private fun showProgress() {
         binding.progress.isVisible = true
-       // binding.scroll.isVisible = false
         binding.errorPlaceholder.root.isVisible = false
     }
 
@@ -220,11 +217,10 @@ class DetailFragment : Fragment() {
         }
         binding.errorPlaceholder.root.isVisible = true
         binding.progress.isVisible = false
-       // binding.scroll.isVisible = false
     }
-    companion object{
+    companion object {
         private const val ID = "id"
-        fun createArgs(id:String):Bundle{
+        fun createArgs(id: String): Bundle {
             return bundleOf(ID to id)
         }
     }
