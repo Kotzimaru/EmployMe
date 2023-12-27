@@ -30,80 +30,94 @@ class RetrofitNetworkClient(
         if (!validator.isConnected()) return Response()
 
         return when (dto) {
-            is SearchRequest -> try {
-                val resp = hhService.getVacancyList(
-                    options = dto.queryMap
-                )
-                resp.apply { resultCode = ResponseCodes.SUCCESS }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
-            // Запрос пишем тут
+            is SearchRequest -> getVacancies(dto)
 
-            is DetailRequest -> try {
-                val resp = hhService.getDetail(dto.id)
-                Response().apply {
-                    resultCode = ResponseCodes.SUCCESS
-                    data = resp
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is DetailRequest -> getVacancy(dto)
 
-            is SimilarRequest -> try {
-                val resp = hhService.getSimilarVacancies(dto.vacancy)
-                Response().apply {
-                    resultCode = ResponseCodes.SUCCESS
-                    data = resp
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is SimilarRequest -> getSimilarVacancies(dto)
 
-            is FilterRequest.Industries -> try {
-                val resp = hhService.getIndustries()
-                val response = IndustriesResponse(resp)
-                response.apply {
-                    resultCode = ResponseCodes.SUCCESS
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is FilterRequest.Industries -> getIndustries()
 
-            is FilterRequest.Countries -> try {
-                val resp = hhService.getCountries()
-                val response = CountriesResponse(resp)
-                response.apply {
-                    resultCode = ResponseCodes.SUCCESS
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is FilterRequest.Countries -> getCountries()
 
-            is FilterRequest.Regions -> try {
-                val resp = hhService.getRegions()
-                val response = RegionsResponse(resp)
-                response.apply {
-                    resultCode = ResponseCodes.SUCCESS
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is FilterRequest.Regions -> getRegions()
 
-            is FilterRequest.RegionsByCountry -> try {
-                val resp = hhService.getRegionsByCountry(dto.countryId)
-                val response = RegionsResponse(resp.areas!!)
-                response.apply {
-                    resultCode = ResponseCodes.SUCCESS
-                }
-            } catch (e: Exception) {
-                Response().apply { resultCode = ResponseCodes.ERROR }
-            }
+            is FilterRequest.RegionsByCountry -> getRegionsByCountry(dto)
 
             else -> {
                 Response().apply { resultCode = ResponseCodes.ERROR }
             }
         }
+    }
+
+    private suspend fun getCountries() = try {
+        val resp = hhService.getCountries()
+        val response = CountriesResponse(resp)
+        response.apply {
+            resultCode = ResponseCodes.SUCCESS
+        }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
+    }
+
+    private suspend fun getRegions() = try {
+        val resp = hhService.getRegions()
+        val response = RegionsResponse(resp)
+        response.apply {
+            resultCode = ResponseCodes.SUCCESS
+        }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
+    }
+
+    private suspend fun getIndustries() = try {
+        val resp = hhService.getIndustries()
+        val response = IndustriesResponse(resp)
+        response.apply {
+            resultCode = ResponseCodes.SUCCESS
+        }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
+    }
+
+    private suspend fun getRegionsByCountry(dto: FilterRequest.RegionsByCountry) =
+        try {
+            val resp = hhService.getRegionsByCountry(dto.countryId)
+            val response = RegionsResponse(resp.areas!!)
+            response.apply {
+                resultCode = ResponseCodes.SUCCESS
+            }
+        } catch (e: Exception) {
+            Response().apply { resultCode = ResponseCodes.ERROR }
+        }
+
+    private suspend fun getSimilarVacancies(dto: SimilarRequest) = try {
+        val resp = hhService.getSimilarVacancies(dto.vacancy)
+        Response().apply {
+            resultCode = ResponseCodes.SUCCESS
+            data = resp
+        }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
+    }
+
+    private suspend fun getVacancy(dto: DetailRequest) = try {
+        val resp = hhService.getDetail(dto.id)
+        Response().apply {
+            resultCode = ResponseCodes.SUCCESS
+            data = resp
+        }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
+    }
+
+    private suspend fun getVacancies(dto: SearchRequest) = try {
+        val resp = hhService.getVacancyList(
+            options = dto.queryMap
+        )
+        resp.apply { resultCode = ResponseCodes.SUCCESS }
+    } catch (e: Exception) {
+        Response().apply { resultCode = ResponseCodes.ERROR }
     }
 
     companion object {

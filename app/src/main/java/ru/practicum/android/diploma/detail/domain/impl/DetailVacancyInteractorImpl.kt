@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.detail.domain.impl
 
-import android.util.Log
 import ru.practicum.android.diploma.detail.domain.DetailVacancyInteractor
 import ru.practicum.android.diploma.detail.domain.api.VacancyDetailRepository
 import ru.practicum.android.diploma.detail.domain.models.DetailVacancyInfo
@@ -11,7 +10,6 @@ class DetailVacancyInteractorImpl(private val repository: VacancyDetailRepositor
     override suspend fun execute(idVacancy: String): DetailVacancyInfo {
         return when (val result = repository.doRequest(idVacancy = idVacancy)) {
             is DtoConsumer.Success -> {
-                Log.d("TAG result", "result - ${result.data}")
                 DetailVacancyInfo(
                     responseCodes = ResponseCodes.SUCCESS,
                     detailVacancy = result.data
@@ -19,7 +17,6 @@ class DetailVacancyInteractorImpl(private val repository: VacancyDetailRepositor
             }
 
             is DtoConsumer.Error -> {
-                Log.d("TAG result", "result - ${result.errorCode}")
                 DetailVacancyInfo(
                     responseCodes = ResponseCodes.ERROR,
                     detailVacancy = null
@@ -27,7 +24,6 @@ class DetailVacancyInteractorImpl(private val repository: VacancyDetailRepositor
             }
 
             is DtoConsumer.NoInternet -> {
-                Log.d("TAG result", "result - ${result.errorCode}")
                 DetailVacancyInfo(
                     responseCodes = ResponseCodes.NO_NET_CONNECTION,
                     detailVacancy = null

@@ -51,54 +51,24 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
         viewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 FilterIndustryStates.ConnectionError -> {
-                    binding.recyclerFilterIndustry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.btnChoose.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.internet_connection_issue)
-                    binding.ivError.setImageResource(R.drawable.error_connection)
+                    setConnectionErrorScreen()
                 }
                 FilterIndustryStates.Loading -> {
-                    binding.pbLoading.visibility = VISIBLE
-                    binding.btnChoose.visibility = GONE
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
+                    setLoadingScreen()
                 }
                 FilterIndustryStates.ServerError -> {
-                    binding.recyclerFilterIndustry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.btnChoose.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.server_error)
-                    binding.ivError.setImageResource(R.drawable.image_error_server_2)
+                    setServerErrorScreen()
                 }
                 is FilterIndustryStates.Success -> {
-                    binding.recyclerFilterIndustry.visibility = VISIBLE
-                    binding.pbLoading.visibility = GONE
-                    adapter.industries.clear()
-                    adapter.industries = it.industries.toMutableList()
-                    adapter.notifyDataSetChanged()
-                    binding.btnChoose.visibility = GONE
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
-                    viewModel.isChecked()
+                    setSuccessScreen(it)
                 }
 
                 FilterIndustryStates.HasSelected -> {
-                    binding.btnChoose.visibility = VISIBLE
-                    binding.pbLoading.visibility = GONE
+                    setHasSelectedScreen()
                 }
 
                 FilterIndustryStates.Empty -> {
-                    binding.recyclerFilterIndustry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.btnChoose.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.there_is_no_such_industry)
-                    binding.ivError.setImageResource(R.drawable.image_error_favorite)
+                    setEmptyScreen()
                 }
             }
         }
@@ -106,6 +76,60 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
         viewModel.getIndustries()
 
         initListeners()
+    }
+
+    private fun setEmptyScreen() {
+        binding.recyclerFilterIndustry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.btnChoose.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.there_is_no_such_industry)
+        binding.ivError.setImageResource(R.drawable.image_error_favorite)
+    }
+
+    private fun setSuccessScreen(it: FilterIndustryStates.Success) {
+        binding.recyclerFilterIndustry.visibility = VISIBLE
+        binding.pbLoading.visibility = GONE
+        adapter.industries.clear()
+        adapter.industries = it.industries.toMutableList()
+        adapter.notifyDataSetChanged()
+        binding.btnChoose.visibility = GONE
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+        viewModel.isChecked()
+    }
+
+    private fun setServerErrorScreen() {
+        binding.recyclerFilterIndustry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.btnChoose.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.server_error)
+        binding.ivError.setImageResource(R.drawable.image_error_server_2)
+    }
+
+    private fun setLoadingScreen() {
+        binding.pbLoading.visibility = VISIBLE
+        binding.btnChoose.visibility = GONE
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+    }
+
+    private fun setHasSelectedScreen() {
+        binding.btnChoose.visibility = VISIBLE
+        binding.pbLoading.visibility = GONE
+    }
+
+    private fun setConnectionErrorScreen() {
+        binding.recyclerFilterIndustry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.btnChoose.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.internet_connection_issue)
+        binding.ivError.setImageResource(R.drawable.error_connection)
     }
 
     private fun initListeners() {
