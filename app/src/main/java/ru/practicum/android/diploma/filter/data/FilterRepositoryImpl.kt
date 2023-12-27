@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.filter.data.model.CountriesResponse
 import ru.practicum.android.diploma.filter.data.model.CountryDto
 import ru.practicum.android.diploma.filter.data.model.FilterRequest
 import ru.practicum.android.diploma.filter.data.model.IndustriesResponse
+import ru.practicum.android.diploma.filter.data.model.RegionDto
 import ru.practicum.android.diploma.filter.data.model.RegionsResponse
 import ru.practicum.android.diploma.filter.domain.api.FilterRepository
 import ru.practicum.android.diploma.filter.domain.models.Country
@@ -87,7 +88,7 @@ class FilterRepositoryImpl(
         return FilterSettingsConverter().map(storageClient.getFilter())
     }
 
-    override suspend fun getFilterSettings(): FilterSettings? {
+    override suspend fun getFilterSettings(): FilterSettings {
         return FilterSettingsConverter().map(storageClient.getFilterSettings())
     }
 
@@ -177,41 +178,15 @@ class FilterRepositoryImpl(
                 val regions = mutableListOf<Region>()
                 if (countryFilter.id.isNotEmpty()) {
                     (response as RegionsResponse).items.forEach {
-                        regions.addAll(
-                            RegionConverter.mapDtoToRegions(
-                                it,
-                                CountryDto(
-                                    countryFilter.id,
-                                    countryFilter.name,
-                                    listOf()
-                                )
-                            )
-                        )
+                        prepareRegionsByCountryFilter(regions, it, countryFilter)
                     }
                 } else {
                     (response as RegionsResponse).items.forEach { country ->
                         country.areas?.forEach {
-                            regions.addAll(
-                                RegionConverter.mapDtoToRegions(
-                                    it,
-                                    CountryDto(
-                                        country.id.toString(),
-                                        country.name.toString(),
-                                        listOf()
-                                    )
-                                )
-                            )
+                            prepareRegions(regions, it, country)
                         }
                     }
                 }
-
-/*                (response as RegionsResponse).items.forEach {
-                    it.areas?.forEach {
-                        regions.add(
-                            RegionConverter.map(it)
-                        )
-                    }
-                }*/
 
                 regions.sortBy { it.name }
                 regions.distinct()
@@ -231,6 +206,23 @@ class FilterRepositoryImpl(
         }
     }.flowOn(Dispatchers.IO)
 
+    private fun prepareRegions(
+        regions: MutableList<Region>,
+        it: RegionDto,
+        country: RegionDto
+    ) {
+        regions.addAll(
+            RegionConverter.mapDtoToRegions(
+                it,
+                CountryDto(
+                    country.id.toString(),
+                    country.name.toString(),
+                    listOf()
+                )
+            )
+        )
+    }
+
     override suspend fun getRegionsByName(name: String): Flow<DtoConsumer<List<Region>>> = flow {
         val countryFilter = CountryConverter.map(storageClient.getCountry())
 
@@ -247,41 +239,15 @@ class FilterRepositoryImpl(
 
                 if (countryFilter.id.isNotEmpty()) {
                     (response as RegionsResponse).items.forEach {
-                        regions.addAll(
-                            RegionConverter.mapDtoToRegions(
-                                it,
-                                CountryDto(
-                                    countryFilter.id,
-                                    countryFilter.name,
-                                    listOf()
-                                )
-                            )
-                        )
+                        prepareRegionsByCountryFilter(regions, it, countryFilter)
                     }
                 } else {
                     (response as RegionsResponse).items.forEach { country ->
                         country.areas?.forEach {
-                            regions.addAll(
-                                RegionConverter.mapDtoToRegions(
-                                    it,
-                                    CountryDto(
-                                        country.id.toString(),
-                                        country.name.toString(),
-                                        listOf()
-                                    )
-                                )
-                            )
+                            prepareRegions(regions, it, country)
                         }
                     }
                 }
-
-                /*                (response as RegionsResponse).items.forEach {
-                                    it.areas?.forEach {
-                                        regions.add(
-                                            RegionConverter.map(it)
-                                        )
-                                    }
-                                }*/
 
                 filteredRegions.addAll(regions.filter { it.name.contains(name, ignoreCase = true) })
                 filteredRegions.sortBy { it.name }
@@ -301,6 +267,23 @@ class FilterRepositoryImpl(
             }
         }
     }.flowOn(Dispatchers.IO)
+
+    private fun prepareRegionsByCountryFilter(
+        regions: MutableList<Region>,
+        it: RegionDto,
+        countryFilter: Country
+    ) {
+        regions.addAll(
+            RegionConverter.mapDtoToRegions(
+                it,
+                CountryDto(
+                    countryFilter.id,
+                    countryFilter.name,
+                    listOf()
+                )
+            )
+        )
+    }
 
     override suspend fun getIndustriesByName(industry: String): Flow<DtoConsumer<List<Industry>>> = flow {
         val response = networkClient.doRequest(FilterRequest.Industries)
