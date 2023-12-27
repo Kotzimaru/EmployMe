@@ -24,12 +24,6 @@ class FilterCountryFragment : Fragment(R.layout.fragment_filter_country) {
 
     private fun chooseCountry(country: Country) {
         viewModel.saveCountryFilter(country)
-/*        setFragmentResult(
-            "country",
-            bundleOf("id" to country.id,
-                "name" to country.name
-            )
-        )*/
         findNavController().popBackStack()
     }
 
@@ -51,42 +45,19 @@ class FilterCountryFragment : Fragment(R.layout.fragment_filter_country) {
         viewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 FilterCountryStates.ConnectionError -> {
-                    binding.recyclerFilterCountry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.internet_connection_issue)
-                    binding.ivError.setImageResource(R.drawable.error_connection)
+                    setConnectionErrorScreen()
                 }
                 FilterCountryStates.Empty -> {
-                    binding.recyclerFilterCountry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.there_is_no_such_country)
-                    binding.ivError.setImageResource(R.drawable.image_error_favorite)
+                    setEmptyScreen()
                 }
                 FilterCountryStates.Loading -> {
-                    binding.pbLoading.visibility = VISIBLE
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
+                    setLoadingScreen()
                 }
                 FilterCountryStates.ServerError -> {
-                    binding.recyclerFilterCountry.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.server_error)
-                    binding.ivError.setImageResource(R.drawable.image_error_server_2)
+                    setServerErrorScreen()
                 }
                 is FilterCountryStates.Success -> {
-                    binding.recyclerFilterCountry.visibility = VISIBLE
-                    binding.pbLoading.visibility = GONE
-                    adapter.countries.clear()
-                    adapter.countries = it.countries.toMutableList()
-                    adapter.notifyDataSetChanged()
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
+                    setSuccessScreen(it)
                 }
             }
         }
@@ -94,6 +65,49 @@ class FilterCountryFragment : Fragment(R.layout.fragment_filter_country) {
         viewModel.getCountries()
 
         initListeners()
+    }
+
+    private fun setSuccessScreen(it: FilterCountryStates.Success) {
+        binding.recyclerFilterCountry.visibility = VISIBLE
+        binding.pbLoading.visibility = GONE
+        adapter.countries.clear()
+        adapter.countries = it.countries.toMutableList()
+        adapter.notifyDataSetChanged()
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+    }
+
+    private fun setServerErrorScreen() {
+        binding.recyclerFilterCountry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.server_error)
+        binding.ivError.setImageResource(R.drawable.image_error_server_2)
+    }
+
+    private fun setLoadingScreen() {
+        binding.pbLoading.visibility = VISIBLE
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+    }
+
+    private fun setEmptyScreen() {
+        binding.recyclerFilterCountry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.there_is_no_such_country)
+        binding.ivError.setImageResource(R.drawable.image_error_favorite)
+    }
+
+    private fun setConnectionErrorScreen() {
+        binding.recyclerFilterCountry.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.internet_connection_issue)
+        binding.ivError.setImageResource(R.drawable.error_connection)
     }
 
     private fun initListeners() {

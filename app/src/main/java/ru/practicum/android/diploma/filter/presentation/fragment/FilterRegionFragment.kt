@@ -62,42 +62,19 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
         viewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 FilterRegionStates.ConnectionError -> {
-                    binding.recyclerFilterRegion.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.internet_connection_issue)
-                    binding.ivError.setImageResource(R.drawable.error_connection)
+                    setConnectionErrorScreen()
                 }
                 FilterRegionStates.Empty -> {
-                    binding.recyclerFilterRegion.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.there_is_no_such_region)
-                    binding.ivError.setImageResource(R.drawable.image_error_favorite)
+                    setEmptyScreen()
                 }
                 FilterRegionStates.Loading -> {
-                    binding.pbLoading.visibility = VISIBLE
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
+                    setLoadingScreen()
                 }
                 FilterRegionStates.ServerError -> {
-                    binding.recyclerFilterRegion.visibility = GONE
-                    binding.pbLoading.visibility = GONE
-                    binding.tvError.visibility = VISIBLE
-                    binding.ivError.visibility = VISIBLE
-                    binding.tvError.setText(R.string.server_error)
-                    binding.ivError.setImageResource(R.drawable.image_error_server_2)
+                    setServerErrorScreen()
                 }
                 is FilterRegionStates.Success -> {
-                    binding.recyclerFilterRegion.visibility = VISIBLE
-                    binding.pbLoading.visibility = GONE
-                    adapter.regions.clear()
-                    adapter.regions = it.regions.toMutableList()
-                    adapter.notifyDataSetChanged()
-                    binding.tvError.visibility = GONE
-                    binding.ivError.visibility = GONE
+                    setSuccessScreen(it)
                 }
             }
         }
@@ -105,6 +82,49 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
         viewModel.getRegions()
 
         initListeners()
+    }
+
+    private fun setSuccessScreen(it: FilterRegionStates.Success) {
+        binding.recyclerFilterRegion.visibility = VISIBLE
+        binding.pbLoading.visibility = GONE
+        adapter.regions.clear()
+        adapter.regions = it.regions.toMutableList()
+        adapter.notifyDataSetChanged()
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+    }
+
+    private fun setServerErrorScreen() {
+        binding.recyclerFilterRegion.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.server_error)
+        binding.ivError.setImageResource(R.drawable.image_error_server_2)
+    }
+
+    private fun setLoadingScreen() {
+        binding.pbLoading.visibility = VISIBLE
+        binding.tvError.visibility = GONE
+        binding.ivError.visibility = GONE
+    }
+
+    private fun setEmptyScreen() {
+        binding.recyclerFilterRegion.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.there_is_no_such_region)
+        binding.ivError.setImageResource(R.drawable.image_error_favorite)
+    }
+
+    private fun setConnectionErrorScreen() {
+        binding.recyclerFilterRegion.visibility = GONE
+        binding.pbLoading.visibility = GONE
+        binding.tvError.visibility = VISIBLE
+        binding.ivError.visibility = VISIBLE
+        binding.tvError.setText(R.string.internet_connection_issue)
+        binding.ivError.setImageResource(R.drawable.error_connection)
     }
 
     private fun initListeners() {

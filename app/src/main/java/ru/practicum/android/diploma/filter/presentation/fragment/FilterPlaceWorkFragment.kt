@@ -37,30 +37,16 @@ class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
         viewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 is FilterPlaceWorkStates.HasCountry -> {
-                    binding.countryEditText.setText(it.country.name)
-                    binding.chooseCountryBottom.visibility = GONE
-                    binding.clearCountryName.visibility = VISIBLE
-                    viewModel.getRegion()
-                    setVisibilityForChooseBtn()
+                    setHasCountryScreen(it)
                 }
                 is FilterPlaceWorkStates.HasRegion -> {
-                    binding.regionEditText.setText(it.region.name)
-                    binding.regionButton.visibility = GONE
-                    binding.clearRegion.visibility = VISIBLE
-                    setVisibilityForChooseBtn()
+                    setHasRegionScreen(it)
                 }
                 is FilterPlaceWorkStates.ClearedCountry -> {
-                    binding.countryEditText.setText("")
-                    binding.chooseCountryBottom.visibility = VISIBLE
-                    binding.clearCountryName.visibility = GONE
-                    viewModel.clearRegionFilter()
-                    setVisibilityForChooseBtn()
+                    setClearedCountryScreen()
                 }
                 is FilterPlaceWorkStates.ClearedRegion -> {
-                    binding.regionEditText.setText("")
-                    binding.regionButton.visibility = VISIBLE
-                    binding.clearRegion.visibility = GONE
-                    setVisibilityForChooseBtn()
+                    setClearedRegionScreen()
                 }
 
                 else -> {
@@ -71,6 +57,36 @@ class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
         initListeners()
 
         viewModel.getCountry()
+    }
+
+    private fun setHasRegionScreen(it: FilterPlaceWorkStates.HasRegion) {
+        binding.regionEditText.setText(it.region.name)
+        binding.regionButton.visibility = GONE
+        binding.clearRegion.visibility = VISIBLE
+        setVisibilityForChooseBtn()
+    }
+
+    private fun setClearedCountryScreen() {
+        binding.countryEditText.setText("")
+        binding.chooseCountryBottom.visibility = VISIBLE
+        binding.clearCountryName.visibility = GONE
+        viewModel.clearRegionFilter()
+        setVisibilityForChooseBtn()
+    }
+
+    private fun setClearedRegionScreen() {
+        binding.regionEditText.setText("")
+        binding.regionButton.visibility = VISIBLE
+        binding.clearRegion.visibility = GONE
+        setVisibilityForChooseBtn()
+    }
+
+    private fun setHasCountryScreen(it: FilterPlaceWorkStates.HasCountry) {
+        binding.countryEditText.setText(it.country.name)
+        binding.chooseCountryBottom.visibility = GONE
+        binding.clearCountryName.visibility = VISIBLE
+        viewModel.getRegion()
+        setVisibilityForChooseBtn()
     }
 
     private fun setVisibilityForChooseBtn() {
