@@ -10,7 +10,7 @@ fun <T> createDebounceFunction(
     coroutineScope: CoroutineScope,
     useLastParam: Boolean,
     action: (T) -> Unit
-):  (T) -> Unit {
+): (T) -> Unit {
     var debounceJob: Job? = null
     return { param: T ->
         if (useLastParam) {

@@ -7,6 +7,5 @@ import kotlinx.serialization.Serializable
 data class RegionDto(
     @SerialName("id") val id: String? = null,
     @SerialName("name") val name: String? = null,
-    @SerialName("areas") val areas: List<RegionDto>? = null
-    ,
+    @SerialName("areas") val areas: List<RegionDto>? = null,
 )

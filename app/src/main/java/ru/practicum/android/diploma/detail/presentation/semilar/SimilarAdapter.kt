@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.detail.presentation.similar
+package ru.practicum.android.diploma.detail.presentation.semilar
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

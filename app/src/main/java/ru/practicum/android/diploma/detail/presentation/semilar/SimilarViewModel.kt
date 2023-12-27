@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.detail.presentation.similar
+package ru.practicum.android.diploma.detail.presentation.semilar
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.detail.domain.SimilarInteractor
-import ru.practicum.android.diploma.detail.presentation.similar.SimilarState.Loading
-import ru.practicum.android.diploma.detail.presentation.similar.SimilarState.NoConnect
+import ru.practicum.android.diploma.detail.presentation.semilar.SimilarState.Loading
+import ru.practicum.android.diploma.detail.presentation.semilar.SimilarState.NoConnect
 import ru.practicum.android.diploma.search.domain.models.ResponseCodes
 
 const val VACANCY = "vacancy"
@@ -46,7 +46,6 @@ class SimilarViewModel(
                     _state.value = NoConnect(resultData.responseCodes.name)
                 }
             }
-
         }
     }
 }

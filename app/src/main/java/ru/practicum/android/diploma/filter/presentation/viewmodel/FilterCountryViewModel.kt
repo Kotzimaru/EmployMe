@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.impl.FilterInteractor
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.presentation.states.FilterCountryStates
-import ru.practicum.android.diploma.filter.presentation.states.FilterRegionStates
 import ru.practicum.android.diploma.search.domain.api.DtoConsumer
 
 class FilterCountryViewModel(
@@ -20,7 +19,7 @@ class FilterCountryViewModel(
     fun getCountries() {
         stateLiveData.postValue(FilterCountryStates.Loading)
         viewModelScope.launch {
-            filterInteractor.getCountries().collect{ dto ->
+            filterInteractor.getCountries().collect { dto ->
                 when (dto) {
                     is DtoConsumer.Error -> {
                         stateLiveData.postValue(FilterCountryStates.ServerError)
@@ -29,7 +28,7 @@ class FilterCountryViewModel(
                         stateLiveData.postValue(FilterCountryStates.ConnectionError)
                     }
                     is DtoConsumer.Success -> {
-                        if(dto.data.size > 0){
+                        if (dto.data.size > 0) {
                             stateLiveData.postValue(FilterCountryStates.Success(dto.data))
                         } else {
                             stateLiveData.postValue(FilterCountryStates.Empty)
@@ -45,5 +44,4 @@ class FilterCountryViewModel(
             filterInteractor.saveCountryFilter(country)
         }
     }
-
 }

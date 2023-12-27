@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,9 +20,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterRegionBinding
-import ru.practicum.android.diploma.filter.presentation.states.FilterRegionStates
 import ru.practicum.android.diploma.filter.domain.models.Region
 import ru.practicum.android.diploma.filter.presentation.adapter.FilterRegionAdapter
+import ru.practicum.android.diploma.filter.presentation.states.FilterRegionStates
 import ru.practicum.android.diploma.filter.presentation.viewmodel.FilterRegionViewModel
 
 class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
@@ -112,8 +110,8 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
     private fun initListeners() {
         binding.etSearch.addTextChangedListener(textWatcherListener())
 
-        binding.etSearch.setOnEditorActionListener { textView, action, keyEvent  ->
-            if(action == EditorInfo.IME_ACTION_DONE){
+        binding.etSearch.setOnEditorActionListener { textView, action, keyEvent ->
+            if (action == EditorInfo.IME_ACTION_DONE) {
                 searchJob?.cancel()
                 searchJob = viewLifecycleOwner.lifecycleScope.launch {
                     delay(SEARCH_DEBOUNCE_DELAY_MILS)
@@ -128,7 +126,6 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
         binding.arrowBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
     }
 
     private fun textWatcherListener() = object : TextWatcher {
@@ -137,7 +134,7 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (!binding.etSearch.text.toString().isNullOrEmpty()){
+            if (!binding.etSearch.text.toString().isNullOrEmpty()) {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_clear)
                 if (start != before) {
@@ -151,7 +148,9 @@ class FilterRegionFragment : Fragment(R.layout.fragment_filter_region) {
             } else {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CUSTOM
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_search)
-                val inputMethodManager = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager = requireContext().getSystemService(
+                    AppCompatActivity.INPUT_METHOD_SERVICE
+                ) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
                 viewModel.getRegions()
             }

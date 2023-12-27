@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.detail.presentation.similar
+package ru.practicum.android.diploma.detail.presentation.semilar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +21,8 @@ class SimilarFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSimilarBinding.inflate(inflater, container, false)
@@ -47,9 +48,7 @@ class SimilarFragment : Fragment() {
             }
 
             is SimilarState.Error -> {
-                setError(
-                    message = state.message,
-                )
+                setError()
             }
 
             is SimilarState.Loading -> {
@@ -72,9 +71,7 @@ class SimilarFragment : Fragment() {
         binding.progress.isVisible = false
     }
 
-    private fun setError(
-        message: String,
-    ) {
+    private fun setError() {
         binding.errorPlaceholder.root.isVisible = true
         binding.rvSimilar.isVisible = false
         binding.progress.isVisible = false

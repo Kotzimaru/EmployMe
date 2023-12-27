@@ -36,49 +36,11 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
         viewModel.getState().observe(viewLifecycleOwner) {
             when (it) {
                 is FilterStates.HasFilters -> {
-                    binding.btnChoose.visibility = VISIBLE
-                    binding.btnRemove.visibility = VISIBLE
-                    binding.salaryEditText.setText(it.salary)
-                    binding.filterCheckbox.isChecked = it.onlyWithSalary
-
-                    if (it.country.name.isNotEmpty()) {
-                        binding.placeOfWorkEditText.setText(it.country.name)
-                        binding.placeOfWorkButton.visibility = GONE
-                        binding.placeOfWorkClear.visibility = VISIBLE
-                    } else {
-                        binding.placeOfWorkEditText.setText("")
-                        binding.placeOfWorkButton.visibility = VISIBLE
-                        binding.placeOfWorkClear.visibility = GONE
-                    }
-
-                    if (it.country.name.isNotEmpty() && it.region.name.isNotEmpty() ) {
-                        binding.placeOfWorkEditText.setText("${it.country.name}, ${it.region.name}")
-                        binding.placeOfWorkButton.visibility = GONE
-                        binding.placeOfWorkClear.visibility = VISIBLE
-                    }
-
-                    if (it.industry.name.isNotEmpty()) {
-                        binding.industryEditText.setText(it.industry.name)
-                        binding.industryButton.visibility = GONE
-                        binding.industryClear.visibility = VISIBLE
-                    } else {
-                        binding.industryEditText.setText("")
-                        binding.industryButton.visibility = VISIBLE
-                        binding.industryClear.visibility = GONE
-                    }
+                    setHasFilterScreen(it)
                 }
 
                 FilterStates.ClearSettings -> {
-                    binding.btnChoose.visibility = GONE
-                    binding.btnRemove.visibility = GONE
-                    binding.placeOfWorkEditText.setText("")
-                    binding.industryEditText.setText("")
-                    binding.placeOfWorkClear.visibility = GONE
-                    binding.placeOfWorkButton.visibility = VISIBLE
-                    binding.industryClear.visibility = GONE
-                    binding.industryButton.visibility = VISIBLE
-                    binding.salaryEditText.setText("")
-                    binding.filterCheckbox.isChecked = false
+                    setClearSettingsScreen()
                 }
 
                 FilterStates.SaveSettings -> {
@@ -86,21 +48,11 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
                 }
 
                 FilterStates.DeleteCountryAndRegion -> {
-                    binding.btnChoose.visibility = GONE
-                    binding.btnRemove.visibility = GONE
-                    binding.placeOfWorkEditText.setText("")
-                    binding.placeOfWorkClear.visibility = GONE
-                    binding.placeOfWorkButton.visibility = VISIBLE
-                    viewModel.getFilters()
+                    setDeleteCountryAndRegionScreen()
                 }
 
                 FilterStates.DeleteIndustry -> {
-                    binding.btnChoose.visibility = GONE
-                    binding.btnRemove.visibility = GONE
-                    binding.industryEditText.setText("")
-                    binding.industryClear.visibility = GONE
-                    binding.industryButton.visibility = VISIBLE
-                    viewModel.getFilters()
+                    setDeleteIndustryScreen()
                 }
             }
         }
@@ -108,6 +60,70 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
         initListeners()
 
         viewModel.getFilters()
+    }
+
+    private fun setDeleteIndustryScreen() {
+        binding.btnChoose.visibility = GONE
+        binding.btnRemove.visibility = GONE
+        binding.industryEditText.setText("")
+        binding.industryClear.visibility = GONE
+        binding.industryButton.visibility = VISIBLE
+        viewModel.getFilters()
+    }
+
+    private fun setDeleteCountryAndRegionScreen() {
+        binding.btnChoose.visibility = GONE
+        binding.btnRemove.visibility = GONE
+        binding.placeOfWorkEditText.setText("")
+        binding.placeOfWorkClear.visibility = GONE
+        binding.placeOfWorkButton.visibility = VISIBLE
+        viewModel.getFilters()
+    }
+
+    private fun setClearSettingsScreen() {
+        binding.btnChoose.visibility = GONE
+        binding.btnRemove.visibility = GONE
+        binding.placeOfWorkEditText.setText("")
+        binding.industryEditText.setText("")
+        binding.placeOfWorkClear.visibility = GONE
+        binding.placeOfWorkButton.visibility = VISIBLE
+        binding.industryClear.visibility = GONE
+        binding.industryButton.visibility = VISIBLE
+        binding.salaryEditText.setText("")
+        binding.filterCheckbox.isChecked = false
+    }
+
+    private fun setHasFilterScreen(it: FilterStates.HasFilters) {
+        binding.btnChoose.visibility = VISIBLE
+        binding.btnRemove.visibility = VISIBLE
+        binding.salaryEditText.setText(it.salary)
+        binding.filterCheckbox.isChecked = it.onlyWithSalary
+
+        if (it.country.name.isNotEmpty()) {
+            binding.placeOfWorkEditText.setText(it.country.name)
+            binding.placeOfWorkButton.visibility = GONE
+            binding.placeOfWorkClear.visibility = VISIBLE
+        } else {
+            binding.placeOfWorkEditText.setText("")
+            binding.placeOfWorkButton.visibility = VISIBLE
+            binding.placeOfWorkClear.visibility = GONE
+        }
+
+        if (it.country.name.isNotEmpty() && it.region.name.isNotEmpty()) {
+            binding.placeOfWorkEditText.setText("${it.country.name}, ${it.region.name}")
+            binding.placeOfWorkButton.visibility = GONE
+            binding.placeOfWorkClear.visibility = VISIBLE
+        }
+
+        if (it.industry.name.isNotEmpty()) {
+            binding.industryEditText.setText(it.industry.name)
+            binding.industryButton.visibility = GONE
+            binding.industryClear.visibility = VISIBLE
+        } else {
+            binding.industryEditText.setText("")
+            binding.industryButton.visibility = VISIBLE
+            binding.industryClear.visibility = GONE
+        }
     }
 
     private fun initListeners() {

@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.filter.data.model.RegionDto
 
 class SharedPrefStorageClient(
     private val sharedPref: SharedPreferences,
-): StorageClient {
+) : StorageClient {
     override suspend fun saveCountry(country: CountryDto) {
         val json = Gson().toJson(country)
         sharedPref.edit()
@@ -19,7 +19,7 @@ class SharedPrefStorageClient(
 
     override suspend fun getCountry(): CountryDto {
         var country = CountryDto(
-            id =  "",
+            id = "",
             name = "",
             areas = listOf()
         )
@@ -48,7 +48,7 @@ class SharedPrefStorageClient(
 
     override suspend fun getRegion(): RegionDto {
         var region = RegionDto(
-            id =  "",
+            id = "",
             name = "",
             areas = listOf()
         )
@@ -182,7 +182,6 @@ class SharedPrefStorageClient(
 
         return filter
     }
-
 
     companion object {
         const val FILTER_AREA = "key_for_area"

@@ -20,11 +20,15 @@ class VacancyDetailRepositoryImpl(private val networkClient: NetworkClient) : Va
                 )
             }
 
-            ru.practicum.android.diploma.search.data.models.ResponseCodes.NO_NET_CONNECTION -> DtoConsumer.NoInternet(
-                response.resultCode.code
-            )
+            ru.practicum.android.diploma.search.data.models.ResponseCodes.NO_NET_CONNECTION ->
+                DtoConsumer.NoInternet(
+                    response.resultCode.code
+                )
 
-            ru.practicum.android.diploma.search.data.models.ResponseCodes.ERROR -> DtoConsumer.Error(response.resultCode.code)
+            ru.practicum.android.diploma.search.data.models.ResponseCodes.ERROR ->
+                DtoConsumer.Error(
+                    response.resultCode.code
+                )
         }
     }
 }

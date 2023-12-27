@@ -36,4 +36,3 @@ const val FROM = "от"
 const val TO = "до"
 const val SPACE = " "
 const val COMMA = ","
-

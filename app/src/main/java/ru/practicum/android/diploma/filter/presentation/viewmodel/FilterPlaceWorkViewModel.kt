@@ -15,19 +15,19 @@ class FilterPlaceWorkViewModel(
     private val stateLiveData = MutableLiveData<FilterPlaceWorkStates>()
     fun getState(): LiveData<FilterPlaceWorkStates> = stateLiveData
 
-    fun getCountry(){
+    fun getCountry() {
         viewModelScope.launch {
             val country = filterInteractor.getCountryFilter()
-            if (country.id.isNotEmpty()){
+            if (country.id.isNotEmpty()) {
                 stateLiveData.postValue(FilterPlaceWorkStates.HasCountry(country))
             }
         }
     }
 
-    fun getRegion(){
+    fun getRegion() {
         viewModelScope.launch {
             val region = filterInteractor.getRegionFilter()
-            if (region.id.isNotEmpty()){
+            if (region.id.isNotEmpty()) {
                 stateLiveData.postValue(FilterPlaceWorkStates.HasRegion(region))
             }
         }

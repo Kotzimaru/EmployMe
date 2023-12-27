@@ -80,5 +80,4 @@ class FilterInteractorImpl(private val repository: FilterRepository) : FilterInt
     override suspend fun getRegionsByName(name: String): Flow<DtoConsumer<List<Region>>> {
         return repository.getRegionsByName(name)
     }
-
 }

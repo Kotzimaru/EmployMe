@@ -9,7 +9,6 @@ import ru.practicum.android.diploma.detail.domain.models.SalaryDetailVacancy
 import ru.practicum.android.diploma.detail.domain.models.SimilarVacancy
 
 fun SimilarVacanciesDto.mapToSimillarVacancies(): List<SimilarVacancy> {
-
     return this.itemSimillarVacancyDtos.map { itemSimillarVacancyDto ->
         val salary = SalaryDetailVacancy(
             from = itemSimillarVacancyDto.salary?.from,
@@ -28,12 +27,12 @@ fun SimilarVacanciesDto.mapToSimillarVacancies(): List<SimilarVacancy> {
     }
 }
 
-
 fun DetailVacancyDto.mapToDetailVacancy(): DetailVacancy {
-
     val comment = if (!contactsDetailVacancyDto?.phoneDetailVacancyDtos.isNullOrEmpty()) {
         contactsDetailVacancyDto?.phoneDetailVacancyDtos?.first()?.comment
-    } else null
+    } else {
+        null
+    }
 
     val salary = SalaryDetailVacancy(
         from = salaryDetailVacancyDto?.from,
@@ -68,11 +67,12 @@ fun DetailVacancyDto.mapToDetailVacancy(): DetailVacancy {
                 middle = contactsDetailVacancyDto?.phoneDetailVacancyDtos?.first()?.city,
                 postfix = contactsDetailVacancyDto?.phoneDetailVacancyDtos?.first()?.number
             )
-        } else null,
+        } else {
+            null
+        },
         salary = salary
     )
 }
-
 
 private fun List<KeySkillDetailVacancyDto>?.mapToString(): String {
     return if (this.isNullOrEmpty()) {

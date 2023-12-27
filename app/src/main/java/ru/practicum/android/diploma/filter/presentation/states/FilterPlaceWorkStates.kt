@@ -9,4 +9,3 @@ sealed class FilterPlaceWorkStates {
     object ClearedCountry : FilterPlaceWorkStates()
     object ClearedRegion : FilterPlaceWorkStates()
 }
-

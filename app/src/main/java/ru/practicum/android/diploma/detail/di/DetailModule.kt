@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.detail.domain.api.VacancyDetailRepository
 import ru.practicum.android.diploma.detail.domain.impl.DetailVacancyInteractorImpl
 import ru.practicum.android.diploma.detail.domain.impl.SimilarInteractorImpl
 import ru.practicum.android.diploma.detail.presentation.detail.DetailViewModel
-import ru.practicum.android.diploma.detail.presentation.similar.SimilarViewModel
+import ru.practicum.android.diploma.detail.presentation.semilar.SimilarViewModel
 
 val detailModule = module {
 
@@ -33,13 +33,16 @@ val detailModule = module {
 
     viewModel {
         DetailViewModel(
-            get(), get(), get()
+            get(),
+            get(),
+            get()
         )
     }
 
     viewModel {
         SimilarViewModel(
-            get(), get()
+            get(),
+            get()
         )
     }
 }

@@ -33,7 +33,7 @@ object RegionConverter {
 
                 )
             )
-            if (regionDto.areas?.isNotEmpty() == true){
+            if (regionDto.areas?.isNotEmpty() == true) {
                 regions.addAll(mapDtosToRegions(regionDto.areas, countryDto))
             }
         }
@@ -49,6 +49,5 @@ object RegionConverter {
         }
 
         return regions
-
     }
 }

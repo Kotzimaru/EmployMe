@@ -33,8 +33,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchViewModel by viewModel()
     private var searchJob: Job? = null
-    private var hasFilterBefore: Boolean = false
-    private var hasFilterAfter: Boolean = false
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -64,81 +62,108 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SearchStates.Default -> {
-                    binding.apply {
-                        rvSearch.visibility = GONE
-                        placeholderImage.setImageResource(R.drawable.image_binoculars)
-                        progressBar.visibility = GONE
-                        placeholderMessage.visibility = GONE
-                        tvRvHeader.visibility = GONE
-                    }
-                    viewModel.hasFilter()
+                    setDefaultScreen()
                 }
 
                 is SearchStates.ServerError -> {
-                    binding.apply {
-                        rvSearch.visibility = GONE
-                        placeholderImage.setImageResource(R.drawable.image_error_server_2)
-                        progressBar.visibility = GONE
-                        placeholderMessage.visibility = VISIBLE
-                        placeholderMessage.setText(R.string.server_error)
-                        tvRvHeader.visibility = GONE
-                    }
+                    setServerErrorScreen()
                 }
 
                 is SearchStates.ConnectionError -> {
-                    binding.apply {
-                        rvSearch.visibility = GONE
-                        placeholderImage.visibility = VISIBLE
-                        placeholderImage.setImageResource(R.drawable.image_scull)
-                        progressBar.visibility = GONE
-                        placeholderMessage.visibility = VISIBLE
-                        placeholderMessage.setText(R.string.internet_connection_issue)
-                        tvRvHeader.visibility = GONE
-                    }
+                    setConnectionErrorScreen()
                 }
 
                 is SearchStates.InvalidRequest -> {
-                    binding.apply {
-                        rvSearch.visibility = GONE
-                        placeholderImage.setImageResource(R.drawable.image_error_favorite)
-                        progressBar.visibility = GONE
-                        placeholderMessage.visibility = VISIBLE
-                        placeholderMessage.setText(R.string.internet_connection_issue)
-                        tvRvHeader.visibility = VISIBLE
-                        tvRvHeader.setText(R.string.vacancy_mismatch)
-                    }
+                    setInvalidRequestScreen()
                 }
 
                 is SearchStates.Success -> {
-                    setSuccessScreen(state.found) // Передать общее кол-во найденных вакансий
-                    adapter.vacancyList = state.vacancyList.toMutableList()
-                    adapter.notifyDataSetChanged()
+                    setSuccessScreen(state, adapter)
                 }
 
                 is SearchStates.Loading -> {
-                    binding.apply {
-                        rvSearch.visibility = GONE
-                        placeholderMessage.visibility = GONE
-                        progressBar.visibility = VISIBLE
-                        placeholderMessage.visibility = GONE
-                        tvRvHeader.visibility = GONE
-                    }
+                    setLoadingScreen()
                 }
 
                 is SearchStates.HasFilter -> {
-                    if (state.hasFilter) {
-                        binding.ivFilter.setImageResource(R.drawable.filter_blue)
-                    } else {
-                        binding.ivFilter.setImageResource(R.drawable.ic_filter)
-                    }
-                    hasFilterAfter = state.hasFilter
+                    setHasFilterScreen(state)
                 }
             }
         }
-
-
-
         initListeners()
+    }
+
+    private fun setSuccessScreen(
+        state: SearchStates.Success,
+        adapter: SearchAdapter
+    ) {
+        setSuccessScreen(state.found) // Передать общее кол-во найденных вакансий
+        adapter.vacancyList = state.vacancyList.toMutableList()
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setHasFilterScreen(state: SearchStates.HasFilter) {
+        if (state.hasFilter) {
+            binding.ivFilter.setImageResource(R.drawable.filter_blue)
+        } else {
+            binding.ivFilter.setImageResource(R.drawable.ic_filter)
+        }
+    }
+
+    private fun setLoadingScreen() {
+        binding.apply {
+            rvSearch.visibility = GONE
+            placeholderMessage.visibility = GONE
+            progressBar.visibility = VISIBLE
+            placeholderMessage.visibility = GONE
+            tvRvHeader.visibility = GONE
+        }
+    }
+
+    private fun setInvalidRequestScreen() {
+        binding.apply {
+            rvSearch.visibility = GONE
+            placeholderImage.setImageResource(R.drawable.image_error_favorite)
+            progressBar.visibility = GONE
+            placeholderMessage.visibility = VISIBLE
+            placeholderMessage.setText(R.string.internet_connection_issue)
+            tvRvHeader.visibility = VISIBLE
+            tvRvHeader.setText(R.string.vacancy_mismatch)
+        }
+    }
+
+    private fun setConnectionErrorScreen() {
+        binding.apply {
+            rvSearch.visibility = GONE
+            placeholderImage.visibility = VISIBLE
+            placeholderImage.setImageResource(R.drawable.image_scull)
+            progressBar.visibility = GONE
+            placeholderMessage.visibility = VISIBLE
+            placeholderMessage.setText(R.string.internet_connection_issue)
+            tvRvHeader.visibility = GONE
+        }
+    }
+
+    private fun setServerErrorScreen() {
+        binding.apply {
+            rvSearch.visibility = GONE
+            placeholderImage.setImageResource(R.drawable.image_error_server_2)
+            progressBar.visibility = GONE
+            placeholderMessage.visibility = VISIBLE
+            placeholderMessage.setText(R.string.server_error)
+            tvRvHeader.visibility = GONE
+        }
+    }
+
+    private fun setDefaultScreen() {
+        binding.apply {
+            rvSearch.visibility = GONE
+            placeholderImage.setImageResource(R.drawable.image_binoculars)
+            progressBar.visibility = GONE
+            placeholderMessage.visibility = GONE
+            tvRvHeader.visibility = GONE
+        }
+        viewModel.hasFilter()
     }
 
     private fun setSuccessScreen(amount: Int) {
@@ -156,7 +181,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (!binding.etSearch.text.toString().isNullOrEmpty()){
+            if (!binding.etSearch.text.toString().isNullOrEmpty()) {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_clear)
                 if (start != before || count > 0) {
@@ -171,7 +196,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             } else {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CUSTOM
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_search)
-                val inputMethodManager = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager = requireContext().getSystemService(
+                    AppCompatActivity.INPUT_METHOD_SERVICE
+                ) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
                 binding.placeholderImage.setImageResource(R.drawable.image_binoculars)
                 binding.placeholderImage.visibility = VISIBLE
@@ -200,8 +227,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         viewModel.clearAll()
     }
 
-    private fun initListeners(){
-
+    private fun initListeners() {
         binding.etSearch.addTextChangedListener(tWCreator())
 
         binding.btClear.setOnClickListener {
@@ -213,7 +239,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         binding.rvSearch.addOnScrollListener(initScrlLsnr())
-
     }
 
     private fun initScrlLsnr() = object : RecyclerView.OnScrollListener() {
@@ -221,7 +246,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             super.onScrolled(recyclerView, dx, dy)
             val pos =
                 (binding.rvSearch.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-            val itemsCount = recyclerView.adapter?.itemCount?: 0
+            val itemsCount = recyclerView.adapter?.itemCount ?: 0
             if (pos >= itemsCount - 1) {
                 viewModel.getNewPage()
             }

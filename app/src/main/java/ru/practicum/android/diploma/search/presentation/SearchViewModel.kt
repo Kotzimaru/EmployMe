@@ -52,18 +52,19 @@ class SearchViewModel(
 
     fun getState(): LiveData<SearchStates> = stateLiveData
 
-    fun getFilterSettings(){
+    fun getFilterSettings() {
         viewModelScope.launch {
             val filterSettings = filterInteractor.getFilterSettings()
             if (filterSettings != null) {
                 val salary = if (filterSettings.salary.isNotEmpty() &&
-                    Integer.parseInt(filterSettings.salary) > 0) {
+                    Integer.parseInt(filterSettings.salary) > 0
+                ) {
                     Integer.parseInt(filterSettings.salary)
                 } else {
                     0
                 }
                 val onlyWithSalary = filterSettings.onlyWithSalary
-                val industry = if (!filterSettings.industry.id.isNullOrEmpty() ) {
+                val industry = if (!filterSettings.industry.id.isNullOrEmpty()) {
                     filterSettings.industry.id
                 } else {
                     ""
@@ -77,7 +78,7 @@ class SearchViewModel(
                         ""
                     }
                 }
-                filter = Filter (
+                filter = Filter(
                     page = 0,
                     request = filter.request,
                     area = area,
@@ -86,7 +87,7 @@ class SearchViewModel(
                     onlyWithSalary = onlyWithSalary
                 )
             } else {
-                filter = Filter (
+                filter = Filter(
                     page = 0,
                     request = filter.request,
                     area = "",
@@ -113,9 +114,9 @@ class SearchViewModel(
                     vacancyList.addAll(vacancyInfo.vacancy)
                     page = vacancyInfo.page
                     maxPage = vacancyInfo.pages
-                    if (page == 0)
+                    if (page == 0) {
                         founded = vacancyInfo.found
-
+                    }
                     state = SearchStates.Success(vacancyList, founded)
                 }
 
@@ -134,13 +135,15 @@ class SearchViewModel(
         viewModelScope.launch {
             val filterSettings = filterInteractor.getFilterSettings()
             if (filterSettings != null) {
-                if(filterSettings.region.id.isNotEmpty() ||
+                if (filterSettings.region.id.isNotEmpty() ||
                     filterSettings.country.id.isNotEmpty() ||
                     filterSettings.industry.id.isNotEmpty() ||
                     filterSettings.onlyWithSalary ||
-                    (!filterSettings.salary.isNullOrEmpty() &&
-                     Integer.getInteger(filterSettings.salary) != null &&
-                     Integer.parseInt(filterSettings.salary) > 0)
+                    (
+                        !filterSettings.salary.isNullOrEmpty() &&
+                            Integer.getInteger(filterSettings.salary) != null &&
+                            Integer.parseInt(filterSettings.salary) > 0
+                        )
                 ) {
                     getFilterSettings()
                     state = SearchStates.HasFilter(true)

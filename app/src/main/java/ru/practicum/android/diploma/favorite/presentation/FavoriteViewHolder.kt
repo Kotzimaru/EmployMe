@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.databinding.ItemViewBinding
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.util.ImageScale
 
-class FavoriteViewHolder(private val binding: ItemViewBinding) : RecyclerView.ViewHolder(binding.root)  {
+class FavoriteViewHolder(private val binding: ItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(vacancy: Vacancy) {
         binding.department.text = vacancy.employer

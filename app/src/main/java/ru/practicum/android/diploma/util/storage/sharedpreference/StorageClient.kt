@@ -4,7 +4,6 @@ import ru.practicum.android.diploma.filter.data.model.CountryDto
 import ru.practicum.android.diploma.filter.data.model.FilterSettingsDto
 import ru.practicum.android.diploma.filter.data.model.IndustryDto
 import ru.practicum.android.diploma.filter.data.model.RegionDto
-import ru.practicum.android.diploma.filter.domain.models.Country
 
 interface StorageClient {
     suspend fun saveCountry(country: CountryDto)

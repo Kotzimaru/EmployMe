@@ -1,10 +1,6 @@
 package ru.practicum.android.diploma.detail.data.dto
 
-
 import com.google.gson.annotations.SerializedName
-import ru.practicum.android.diploma.detail.data.dto.AreaDetailVacancyDto
-import ru.practicum.android.diploma.detail.data.dto.EmployerDetailVacancyDto
-import ru.practicum.android.diploma.detail.data.dto.SalaryDetailVacancyDto
 
 data class ItemSimillarVacancyDto(
     @SerializedName("id")

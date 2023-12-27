@@ -73,5 +73,4 @@ class FavoriteFragment : Fragment() {
             DetailFragment.createArgs(id)
         )
     }
-
 }

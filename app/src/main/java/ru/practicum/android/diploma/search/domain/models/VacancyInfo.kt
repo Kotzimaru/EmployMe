@@ -6,4 +6,4 @@ data class VacancyInfo(
     val found: Int = 0,
     val page: Int = 0,
     val pages: Int = 0
-    )
+)

@@ -8,7 +8,9 @@ import ru.practicum.android.diploma.databinding.ItemIndustryBinding
 import ru.practicum.android.diploma.filter.domain.models.Industry
 import ru.practicum.android.diploma.filter.presentation.viewholder.FilterIndustryViewHolder
 
-class FilterIndustryAdapter (val onIndustryClickedCB: (Industry) -> Unit) : RecyclerView.Adapter<FilterIndustryViewHolder>() {
+class FilterIndustryAdapter(
+    val onIndustryClickedCB: (Industry) -> Unit
+) : RecyclerView.Adapter<FilterIndustryViewHolder>() {
 
     var industries = mutableListOf<Industry>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterIndustryViewHolder {
@@ -25,9 +27,7 @@ class FilterIndustryAdapter (val onIndustryClickedCB: (Industry) -> Unit) : Recy
     override fun getItemCount() = industries.size
 
     override fun onBindViewHolder(holder: FilterIndustryViewHolder, position: Int) {
-
-        val clickListener = View.OnClickListener() {
-
+        val clickListener = View.OnClickListener {
             industries[position].isChecked = !industries[position].isChecked
             industries.forEach {
                 it.isChecked = (it == industries[position])

@@ -18,7 +18,7 @@ class FavoriteInteractorImpl(
         favoriteRepository.deleteFavorite(id)
     }
 
-    override fun getFavorites(): Flow<Pair<FavoriteStates,MutableList<Vacancy>>> {
+    override fun getFavorites(): Flow<Pair<FavoriteStates, MutableList<Vacancy>>> {
         return favoriteRepository.getFavorites()
     }
 

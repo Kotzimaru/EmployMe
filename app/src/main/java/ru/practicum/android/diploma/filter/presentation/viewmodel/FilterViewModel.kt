@@ -19,25 +19,27 @@ class FilterViewModel(
         viewModelScope.launch {
             val filter = filterInteractor.getFilter()
             if (filter != null) {
-                stateLiveData.postValue(FilterStates.HasFilters(
-                    filter.salary,
-                    filter.onlyWithSalary,
-                    filter.industry,
-                    filter.country,
-                    filter.region
-                ))
+                stateLiveData.postValue(
+                    FilterStates.HasFilters(
+                        filter.salary,
+                        filter.onlyWithSalary,
+                        filter.industry,
+                        filter.country,
+                        filter.region
+                    )
+                )
             }
         }
     }
 
-    fun setFilterSettings(salary: String, onlyWithSalary: Boolean){
+    fun setFilterSettings(salary: String, onlyWithSalary: Boolean) {
         viewModelScope.launch {
             filterInteractor.setFilterSettings(salary, onlyWithSalary)
             stateLiveData.postValue(FilterStates.SaveSettings)
         }
     }
 
-    fun clearFilterSettings(){
+    fun clearFilterSettings() {
         viewModelScope.launch {
             filterInteractor.clearFilterSettings()
             stateLiveData.postValue(FilterStates.ClearSettings)

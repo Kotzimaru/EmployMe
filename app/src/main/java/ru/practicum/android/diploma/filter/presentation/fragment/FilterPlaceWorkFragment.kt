@@ -6,39 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.RenderProcessGoneDetail
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterPlaceWorkBinding
-import ru.practicum.android.diploma.filter.data.model.RegionArea
-import ru.practicum.android.diploma.filter.domain.models.Region
 import ru.practicum.android.diploma.filter.presentation.states.FilterPlaceWorkStates
 import ru.practicum.android.diploma.filter.presentation.viewmodel.FilterPlaceWorkViewModel
 
 class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
     private lateinit var binding: FragmentFilterPlaceWorkBinding
     private val viewModel: FilterPlaceWorkViewModel by viewModel()
-    private var countryName: String = ""
-    private var countryId: String = ""
-    private var regionName: String = ""
-    private var regionId: String = ""
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-/*        setFragmentResultListener("country") { key, bundle ->
-            countryName = bundle.getString("name").toString()
-            countryId = bundle.getString("id").toString()
-        }
-        setFragmentResultListener("region") { key, bundle ->
-            regionName = bundle.getString("name").toString()
-            regionId = bundle.getString("id").toString()
-        }*/
-    }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -84,7 +64,6 @@ class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
                 }
 
                 else -> {
-
                 }
             }
         }
@@ -92,8 +71,6 @@ class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
         initListeners()
 
         viewModel.getCountry()
-
-
     }
 
     private fun setVisibilityForChooseBtn() {
@@ -134,7 +111,4 @@ class FilterPlaceWorkFragment : Fragment(R.layout.fragment_filter_place_work) {
         const val VISIBLE = View.VISIBLE
         const val GONE = View.GONE
     }
-
 }
-
-

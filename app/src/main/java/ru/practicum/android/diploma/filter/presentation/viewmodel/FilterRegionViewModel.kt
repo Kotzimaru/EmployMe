@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.impl.FilterInteractor
-import ru.practicum.android.diploma.filter.presentation.states.FilterRegionStates
 import ru.practicum.android.diploma.filter.domain.models.Region
+import ru.practicum.android.diploma.filter.presentation.states.FilterRegionStates
 import ru.practicum.android.diploma.search.domain.api.DtoConsumer
 
 class FilterRegionViewModel(
@@ -25,12 +25,11 @@ class FilterRegionViewModel(
     fun getRegions() {
         stateLiveData.postValue(FilterRegionStates.Loading)
         viewModelScope.launch {
-            filterInteractor.getRegions().collect{ dto ->
+            filterInteractor.getRegions().collect { dto ->
                 postRegion(dto)
             }
         }
     }
-
 
     private fun postRegion(dto: DtoConsumer<List<Region>>) {
         when (dto) {
@@ -41,7 +40,7 @@ class FilterRegionViewModel(
                 stateLiveData.postValue(FilterRegionStates.ConnectionError)
             }
             is DtoConsumer.Success -> {
-                if(dto.data.size > 0){
+                if (dto.data.size > 0) {
                     stateLiveData.postValue(FilterRegionStates.Success(dto.data))
                 } else {
                     stateLiveData.postValue(FilterRegionStates.Empty)
@@ -53,7 +52,7 @@ class FilterRegionViewModel(
     fun getRegionsByName(name: String) {
         stateLiveData.postValue(FilterRegionStates.Loading)
         viewModelScope.launch {
-            filterInteractor.getRegionsByName(name).collect{ dto ->
+            filterInteractor.getRegionsByName(name).collect { dto ->
                 postRegion(dto)
             }
         }

@@ -53,22 +53,21 @@ object AdapterSearch {
         )
     }*/
 
-    fun searchResponseToVacancyInfo(response: SearchResponse): VacancyInfo = VacancyInfo (
+    fun searchResponseToVacancyInfo(response: SearchResponse): VacancyInfo = VacancyInfo(
         responseCodes = when (response.resultCode.code) {
             200 -> { ru.practicum.android.diploma.search.domain.models.ResponseCodes.SUCCESS }
             500 -> { ru.practicum.android.diploma.search.domain.models.ResponseCodes.SUCCESS }
-            else -> { ru.practicum.android.diploma.search.domain.models.ResponseCodes.SUCCESS}
+            else -> { ru.practicum.android.diploma.search.domain.models.ResponseCodes.SUCCESS }
         },
-        vacancy = response.items.map{
+        vacancy = response.items.map {
             Vacancy(
                 id = it.id,
                 area = it.area.name,
                 // department = it.department.name,
-                employerImgUrl = it.employer.logoUrls?.original?: "",
+                employerImgUrl = it.employer.logoUrls?.original ?: "",
                 employer = it.employer.name,
                 name = it.name,
-                salary = formSalaryString(it.salary),
-                type = it.type.name
+                salary = formSalaryString(it.salary)
             )
         },
         found = response.found,
@@ -100,7 +99,10 @@ object AdapterSearch {
         if (filter.onlyWithSalary == true) request["only_with_salary"] = filter.onlyWithSalary.toString()
 
         if (!filter.salary.toString().isNullOrBlank() &&
-            Integer.parseInt(filter.salary.toString()) > 0) request["salary"] = filter.salary.toString()
+            Integer.parseInt(filter.salary.toString()) > 0
+        ) {
+            request["salary"] = filter.salary.toString()
+        }
 
         return request
     }

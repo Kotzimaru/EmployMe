@@ -24,11 +24,9 @@ class DetailViewModel(
     private val _state = MutableLiveData<DetailState>(Loading)
     val state = _state
 
-
-
-    fun onFavoriteClick(vacancy: DetailVacancy, setFavorite: Boolean){
+    fun onFavoriteClick(vacancy: DetailVacancy, setFavorite: Boolean) {
         viewModelScope.launch {
-            if(setFavorite){
+            if (setFavorite) {
                 favoriteInterActor.addFavorite(vacancy)
                 _state.value = DetailState.IsFavorite(true)
             } else {
@@ -38,10 +36,10 @@ class DetailViewModel(
         }
     }
 
-    fun isFavorite(id: String){
+    fun isFavorite(id: String) {
         viewModelScope.launch {
-            favoriteInterActor.getFavorite(id).collect{
-                if (it.isEmpty()){
+            favoriteInterActor.getFavorite(id).collect {
+                if (it.isEmpty()) {
                     _state.value = DetailState.IsFavorite(false)
                 } else {
                     _state.value = DetailState.IsFavorite(true)
@@ -50,11 +48,11 @@ class DetailViewModel(
         }
     }
 
-    private fun getVacancyFromDB(id: String){
+    private fun getVacancyFromDB(id: String) {
         _state.value = Loading
         viewModelScope.launch {
-            favoriteInterActor.getFavorite(id).collect{
-                if (it.isEmpty()){
+            favoriteInterActor.getFavorite(id).collect {
+                if (it.isEmpty()) {
                     _state.value = NoConnect(ResponseCodes.NO_NET_CONNECTION.name)
                 } else {
                     _state.value = Success(it[0])
@@ -65,7 +63,6 @@ class DetailViewModel(
 
     fun getData() {
         viewModelScope.launch {
-            //val id = savedStateHandle.get<String>(VACANCY_ID) ?: return@launch
             val resultData = detailsInterActor.execute(id)
             when (resultData.responseCodes) {
                 ResponseCodes.ERROR -> {
@@ -79,12 +76,8 @@ class DetailViewModel(
 
                 ResponseCodes.NO_NET_CONNECTION -> {
                     getVacancyFromDB(id)
-                    //_state.value = NoConnect(resultData.responseCodes.name)
                 }
             }
-
         }
     }
-
-
 }

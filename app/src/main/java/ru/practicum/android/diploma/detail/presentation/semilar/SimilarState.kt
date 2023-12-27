@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.detail.presentation.similar
+package ru.practicum.android.diploma.detail.presentation.semilar
 
 import ru.practicum.android.diploma.detail.domain.models.SimilarVacancy
 

@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.data.converter.CountryConverter
-import ru.practicum.android.diploma.filter.data.converter.RegionConverter
 import ru.practicum.android.diploma.filter.data.converter.FilterSettingsConverter
 import ru.practicum.android.diploma.filter.data.converter.IndustryConverter
+import ru.practicum.android.diploma.filter.data.converter.RegionConverter
 import ru.practicum.android.diploma.filter.data.model.CountriesResponse
 import ru.practicum.android.diploma.filter.data.model.CountryDto
 import ru.practicum.android.diploma.filter.data.model.FilterRequest
@@ -26,7 +26,7 @@ import ru.practicum.android.diploma.util.storage.sharedpreference.StorageClient
 class FilterRepositoryImpl(
     private val storageClient: StorageClient,
     private val networkClient: NetworkClient,
-): FilterRepository {
+) : FilterRepository {
     override suspend fun saveCountryFilter(country: Country) {
         storageClient.saveCountry(CountryConverter.map(country))
     }
@@ -40,11 +40,19 @@ class FilterRepositoryImpl(
     }
 
     override suspend fun saveRegionFilter(region: Region) {
-        storageClient.saveRegion(RegionConverter.map(region))
-        storageClient.saveCountry(CountryConverter.map(Country(
-            region.countryId,
-            region.countryName
-        )))
+        storageClient.saveRegion(
+            RegionConverter.map(
+                region
+            )
+        )
+        storageClient.saveCountry(
+            CountryConverter.map(
+                Country(
+                    region.countryId,
+                    region.countryName
+                )
+            )
+        )
     }
 
     override suspend fun deleteRegionFilter() {
@@ -85,7 +93,7 @@ class FilterRepositoryImpl(
 
     override suspend fun getIndustries(): Flow<DtoConsumer<List<Industry>>> = flow {
         val response = networkClient.doRequest(FilterRequest.Industries)
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> {
                 val industries = mutableListOf<Industry>()
                 (response as IndustriesResponse).items.forEach {
@@ -102,9 +110,9 @@ class FilterRepositoryImpl(
                 industries.distinct()
 
                 val industryFilter = getIndustryFilter()
-                if (industryFilter.id.isNotEmpty()){
+                if (industryFilter.id.isNotEmpty()) {
                     industries.forEach {
-                        if (it.id.equals(industryFilter.id)){
+                        if (it.id.equals(industryFilter.id)) {
                             it.isChecked = true
                         }
                     }
@@ -128,8 +136,8 @@ class FilterRepositoryImpl(
 
     override suspend fun getCountries(): Flow<DtoConsumer<List<Country>>> = flow<DtoConsumer<List<Country>>> {
         val response = networkClient.doRequest(FilterRequest.Countries)
-        when (response.resultCode){
-            ResponseCodes.SUCCESS ->{
+        when (response.resultCode) {
+            ResponseCodes.SUCCESS -> {
                 val countries = mutableListOf<Country>()
                 (response as CountriesResponse).items.forEach {
                     countries.add(
@@ -158,26 +166,41 @@ class FilterRepositoryImpl(
     override suspend fun getRegions(): Flow<DtoConsumer<List<Region>>> = flow<DtoConsumer<List<Region>>> {
         val countryFilter = CountryConverter.map(storageClient.getCountry())
 
-        val response = if (countryFilter.id.isNotEmpty()){
+        val response = if (countryFilter.id.isNotEmpty()) {
             networkClient.doRequest(FilterRequest.RegionsByCountry(countryFilter.id))
         } else {
             networkClient.doRequest(FilterRequest.Regions)
         }
 
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> {
                 val regions = mutableListOf<Region>()
-
-
-                if (countryFilter.id.isNotEmpty()){
+                if (countryFilter.id.isNotEmpty()) {
                     (response as RegionsResponse).items.forEach {
-                        regions.addAll(RegionConverter.mapDtoToRegions(it, CountryDto(countryFilter.id, countryFilter.name, listOf())))
+                        regions.addAll(
+                            RegionConverter.mapDtoToRegions(
+                                it,
+                                CountryDto(
+                                    countryFilter.id,
+                                    countryFilter.name,
+                                    listOf()
+                                )
+                            )
+                        )
                     }
                 } else {
-                    (response as RegionsResponse).items.forEach {country ->
+                    (response as RegionsResponse).items.forEach { country ->
                         country.areas?.forEach {
-                            regions.addAll(RegionConverter.mapDtoToRegions(it, CountryDto(country.id.toString(),
-                                country.name.toString(), listOf())))
+                            regions.addAll(
+                                RegionConverter.mapDtoToRegions(
+                                    it,
+                                    CountryDto(
+                                        country.id.toString(),
+                                        country.name.toString(),
+                                        listOf()
+                                    )
+                                )
+                            )
                         }
                     }
                 }
@@ -208,29 +231,46 @@ class FilterRepositoryImpl(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getRegionsByName(name: String): Flow<DtoConsumer<List<Region>>> = flow<DtoConsumer<List<Region>>> {
+    override suspend fun getRegionsByName(name: String): Flow<DtoConsumer<List<Region>>> = flow {
         val countryFilter = CountryConverter.map(storageClient.getCountry())
 
-        val response = if (countryFilter.id.isNotEmpty()){
+        val response = if (countryFilter.id.isNotEmpty()) {
             networkClient.doRequest(FilterRequest.RegionsByCountry(countryFilter.id))
         } else {
             networkClient.doRequest(FilterRequest.Regions)
         }
 
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> {
                 val regions = mutableListOf<Region>()
                 val filteredRegions = mutableListOf<Region>()
 
-                if (countryFilter.id.isNotEmpty()){
+                if (countryFilter.id.isNotEmpty()) {
                     (response as RegionsResponse).items.forEach {
-                        regions.addAll(RegionConverter.mapDtoToRegions(it, CountryDto(countryFilter.id, countryFilter.name, listOf())))
+                        regions.addAll(
+                            RegionConverter.mapDtoToRegions(
+                                it,
+                                CountryDto(
+                                    countryFilter.id,
+                                    countryFilter.name,
+                                    listOf()
+                                )
+                            )
+                        )
                     }
                 } else {
-                    (response as RegionsResponse).items.forEach {country ->
+                    (response as RegionsResponse).items.forEach { country ->
                         country.areas?.forEach {
-                            regions.addAll(RegionConverter.mapDtoToRegions(it,CountryDto(country.id.toString(),
-                                country.name.toString(), listOf())))
+                            regions.addAll(
+                                RegionConverter.mapDtoToRegions(
+                                    it,
+                                    CountryDto(
+                                        country.id.toString(),
+                                        country.name.toString(),
+                                        listOf()
+                                    )
+                                )
+                            )
                         }
                     }
                 }
@@ -264,7 +304,7 @@ class FilterRepositoryImpl(
 
     override suspend fun getIndustriesByName(industry: String): Flow<DtoConsumer<List<Industry>>> = flow {
         val response = networkClient.doRequest(FilterRequest.Industries)
-        when (response.resultCode){
+        when (response.resultCode) {
             ResponseCodes.SUCCESS -> {
                 val industries = mutableListOf<Industry>()
                 val filteredIndustries = mutableListOf<Industry>()
@@ -283,9 +323,9 @@ class FilterRepositoryImpl(
                 filteredIndustries.distinct()
 
                 val industryFilter = getIndustryFilter()
-                if (industryFilter.id.isNotEmpty()){
+                if (industryFilter.id.isNotEmpty()) {
                     filteredIndustries.forEach {
-                        if (it.id.equals(industryFilter.id)){
+                        if (it.id.equals(industryFilter.id)) {
                             it.isChecked = true
                         }
                     }

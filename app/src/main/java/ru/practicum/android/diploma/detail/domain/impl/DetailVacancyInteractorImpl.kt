@@ -32,7 +32,6 @@ class DetailVacancyInteractorImpl(private val repository: VacancyDetailRepositor
                     responseCodes = ResponseCodes.NO_NET_CONNECTION,
                     detailVacancy = null
                 )
-
             }
         }
     }

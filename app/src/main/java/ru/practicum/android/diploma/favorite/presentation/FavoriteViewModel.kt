@@ -19,11 +19,9 @@ class FavoriteViewModel(
 
     fun loadFavorites() {
         viewModelScope.launch {
-            favoriteInteractor.getFavorites().collect{
+            favoriteInteractor.getFavorites().collect {
                 stateLiveData.value = it
             }
-
         }
     }
-
 }

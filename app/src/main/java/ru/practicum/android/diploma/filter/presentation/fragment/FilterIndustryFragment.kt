@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
-import ru.practicum.android.diploma.filter.presentation.states.FilterIndustryStates
 import ru.practicum.android.diploma.filter.domain.models.Industry
 import ru.practicum.android.diploma.filter.presentation.adapter.FilterIndustryAdapter
+import ru.practicum.android.diploma.filter.presentation.states.FilterIndustryStates
 import ru.practicum.android.diploma.filter.presentation.viewmodel.FilterIndustryViewModel
 
 class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
@@ -111,8 +111,8 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
     private fun initListeners() {
         binding.etSearch.addTextChangedListener(textWatcherListener())
 
-        binding.etSearch.setOnEditorActionListener { textView, action, keyEvent  ->
-            if(action == EditorInfo.IME_ACTION_DONE){
+        binding.etSearch.setOnEditorActionListener { textView, action, keyEvent ->
+            if (action == EditorInfo.IME_ACTION_DONE) {
                 searchJob?.cancel()
                 searchJob = viewLifecycleOwner.lifecycleScope.launch {
                     delay(SEARCH_DEBOUNCE_DELAY_MILS)
@@ -134,13 +134,13 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
         }
     }
 
-    private fun textWatcherListener() = object : TextWatcher{
+    private fun textWatcherListener() = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             //
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (!binding.etSearch.text.toString().isNullOrEmpty()){
+            if (!binding.etSearch.text.toString().isNullOrEmpty()) {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_clear)
                 if (start != before) {
@@ -154,7 +154,9 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
             } else {
                 binding.container.endIconMode = TextInputLayout.END_ICON_CUSTOM
                 binding.container.endIconDrawable = requireContext().getDrawable(R.drawable.ic_search)
-                val inputMethodManager = requireContext().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager = requireContext().getSystemService(
+                    AppCompatActivity.INPUT_METHOD_SERVICE
+                ) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
                 viewModel.getIndustries()
             }
@@ -163,10 +165,9 @@ class FilterIndustryFragment : Fragment(R.layout.fragment_filter_industry) {
         override fun afterTextChanged(p0: Editable?) {
             //
         }
-
     }
 
-    private fun chooseIndustry(industry : Industry){
+    private fun chooseIndustry(industry: Industry) {
         viewModel.bufferIndustry(industry)
     }
 

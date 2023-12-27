@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/similarFragment"
-        android:name="ru.practicum.android.diploma.detail.presentation.similar.SimilarFragment"
+        android:name="ru.practicum.android.diploma.detail.presentation.semilar.SimilarFragment"
         android:label="fragment_similar"
         tools:layout="@layout/fragment_similar" >
         <action

@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.search.data.models.ResponseCodes
 import ru.practicum.android.diploma.search.domain.api.DtoConsumer
 import ru.practicum.android.diploma.util.network.NetworkClient
 
-class SimilarRepositoryImpl(private val networkClient: NetworkClient): SimilarRepository {
+class SimilarRepositoryImpl(private val networkClient: NetworkClient) : SimilarRepository {
 
     override suspend fun doRequest(vacancy: String): DtoConsumer<List<SimilarVacancy>> {
         val response = networkClient.doRequest(SimilarRequest(vacancy))
